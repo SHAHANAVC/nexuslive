@@ -1,7 +1,12 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
-
+import api from '../../api';
+import { useNavigate } from "react-router-dom";
 const InternshipForm = ({ student, onSave, onCancel }) => {
+  const navigate = useNavigate();
+  console.log(student);
+  
   const [formData, setFormData] = useState({
     institution: student?.institution || '',
     collegeName: student?.collegeName || '',
@@ -19,7 +24,10 @@ const InternshipForm = ({ student, onSave, onCancel }) => {
     course: student?.course || '',
     modeOfCourse: student?.modeOfCourse || '',
     dateOfJoining: student?.dateOfJoining || '',
-    fees: student?.fees || ''
+    fees: student?.fees || '',
+    category:'internship',
+    name: student?.name || '',
+    preferredDuration : student?.preferredDuration || '',
   });
 
   const [errors, setErrors] = useState({});
@@ -84,13 +92,29 @@ const InternshipForm = ({ student, onSave, onCancel }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit =async (e) => {
+    console.log("-------------------------------------------");
+    
     e.preventDefault();
-    if (validateForm()) {
-      onSave({
-        ...formData,
-        name: formData.email.split('@')[0] // Simple name extraction from email
-      });
+    // if (validateForm()) {
+    //   onSave({
+    //     ...formData,
+    //     name: formData.email.split('@')[0] // Simple name extraction from email
+    //   });
+    // }
+    if(validateForm()){
+      try{
+        const response = await  api.post('/registrations',formData)
+        console.log(response);
+        alert(response.data.message)
+        navigate('/')        
+        
+      }
+      catch (error) {
+        console.log("kkkkkkkkkkkkkkkkkkk",error);
+        alert(error.response.data.message)
+        
+      }
     }
   };
 
@@ -134,6 +158,41 @@ const InternshipForm = ({ student, onSave, onCancel }) => {
               </Form.Control.Feedback>
             </Form.Group>
           </Col>
+
+        <Col md={6}>
+            <Form.Group>
+              <Form.Label>Name *</Form.Label>
+              <Form.Control
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                isInvalid={!!errors.name}
+                className="bg-dark text-white"
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.name}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Col>
+
+          <Col md={6}>
+            <Form.Group>
+              <Form.Label>Duration *</Form.Label>
+              <Form.Control
+                type="text"
+                name="preferredDuration"
+                value={formData.preferredDuration}
+                onChange={handleChange}
+                isInvalid={!!errors.preferredDuration}
+                className="bg-dark text-white"
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.preferredDuration}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Col>
+
 
           <Col md={6}>
             <Form.Group>
@@ -360,9 +419,9 @@ const InternshipForm = ({ student, onSave, onCancel }) => {
                 className="bg-dark text-white"
               >
                 <option value="">Select Mode</option>
-                <option value="Full Time">Full Time</option>
-                <option value="Part Time">Part Time</option>
-                <option value="Distance">Distance</option>
+                <option value="Online">Online</option>
+                <option value="Offline">Offline</option>
+                {/* <option value="Distance">Distance</option> */}
               </Form.Select>
               <Form.Control.Feedback type="invalid">
                 {errors.modeOfCourse}

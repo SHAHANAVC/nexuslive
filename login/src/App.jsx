@@ -12,6 +12,7 @@ import Staffdash from "./components/staffs/Staffdash";
 import Adminstudent from "./components/admin/Adminstudent";
 import StudentDetails from "./components/admin/StudentDetails";
 import StaffRegistration from "./components/StaffRegistration";
+import ViewStaff from "./components/superadmin/ViewStaff";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path={"/settings"} element={<Settings />}></Route>
         <Route path={"/staff"} element={<Staff />}></Route>
         <Route path={"/staffdash"} element={<Staffdash/>}></Route>
+        <Route path={"/superadminviewstaff"} element={<ViewStaff/>}></Route>
         <Route path={"/admin/staff/staffreg"} element={<StaffRegistration/>}></Route>
 
 

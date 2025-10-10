@@ -14,7 +14,7 @@ import {
   Alert, 
   Dropdown 
 } from 'react-bootstrap';
-import { FaEye, FaEdit, FaTrash, FaSearch, FaFilter, FaSync, FaUserCog } from 'react-icons/fa';
+// import { FaEye, FaEdit, FaTrash, FaSearch, FaFilter, FaSync, FaUserCog } from 'react-icons/fa';
 import api from '../../api';
 
 const ViewStaff = () => {
@@ -234,7 +234,7 @@ const ViewStaff = () => {
         <Row className="mb-4">
           <Col>
             <Alert variant="danger" className="d-flex align-items-center">
-              <FaTrash className="me-2" />
+              {/* <FaTrash className="me-2" /> */}
               {error}
             </Alert>
           </Col>
@@ -245,7 +245,7 @@ const ViewStaff = () => {
         <Row className="mb-4">
           <Col>
             <Alert variant="success" className="d-flex align-items-center">
-              <FaSync className="me-2" />
+              {/* <FaSync className="me-2" /> */}
               {success}
             </Alert>
           </Col>
@@ -257,7 +257,7 @@ const ViewStaff = () => {
         <Col lg={3} md={6} className="mb-2">
           <InputGroup>
             <InputGroup.Text className="bg-dark text-white border-secondary">
-              <FaSearch />
+              {/* <FaSearch /> */}
             </InputGroup.Text>
             <Form.Control
               type="text"
@@ -318,7 +318,7 @@ const ViewStaff = () => {
             onClick={fetchStaff}
             className="w-100 d-flex align-items-center justify-content-center gap-2"
           >
-            <FaSync /> Refresh
+            {/* <FaSync /> Refresh */}
           </Button>
         </Col>
       </Row>
@@ -329,7 +329,7 @@ const ViewStaff = () => {
           <Card className="bg-dark text-white border-secondary">
             <Card.Header className="border-secondary d-flex justify-content-between align-items-center">
               <h5 className="mb-0">
-                <FaEye className="me-2" />
+                {/* <FaEye className="me-2" /> */}
                 Staff List
               </h5>
               <Badge bg="secondary">{filteredStaff.length} staff members</Badge>
@@ -337,7 +337,7 @@ const ViewStaff = () => {
             <Card.Body className="p-0">
               {filteredStaff.length === 0 ? (
                 <div className="text-center py-5">
-                  <FaSearch size={48} className="text-muted mb-3" />
+                  {/* <FaSearch size={48} className="text-muted mb-3" /> */}
                   <h5 className="text-muted">No staff members found</h5>
                   <p className="text-muted">Try adjusting your search or filters</p>
                 </div>
@@ -400,7 +400,7 @@ const ViewStaff = () => {
                                   onClick={() => handleView(staff)}
                                   className="text-white"
                                 >
-                                  <FaEye className="me-2" />
+                                  {/* <FaEye className="me-2" /> */}
                                   View Details
                                 </Dropdown.Item>
                                 
@@ -409,13 +409,13 @@ const ViewStaff = () => {
                                     onClick={() => handleRoleChange(staff)}
                                     className="text-warning"
                                   >
-                                    <FaUserCog className="me-2" />
+                                    {/* <FaUserCog className="me-2" /> */}
                                     Change Role
                                   </Dropdown.Item>
                                 )}
                                 
                                 <Dropdown.Item className="text-white">
-                                  <FaEdit className="me-2" />
+                                  {/* <FaEdit className="me-2" /> */}
                                   Edit
                                 </Dropdown.Item>
                                 
@@ -425,7 +425,7 @@ const ViewStaff = () => {
                                   onClick={() => handleDelete(staff)}
                                   className="text-danger"
                                 >
-                                  <FaTrash className="me-2" />
+                                  {/* <FaTrash className="me-2" /> */}
                                   Delete
                                 </Dropdown.Item>
                               </Dropdown.Menu>
@@ -580,7 +580,7 @@ const ViewStaff = () => {
             onClick={updateStaffRole}
             disabled={!newRole || newRole === selectedStaff?.role}
           >
-            <FaUserCog className="me-2" />
+            {/* <FaUserCog className="me-2" /> */}
             Update Role
           </Button>
         </Modal.Footer>

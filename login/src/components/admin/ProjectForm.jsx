@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button, Row, Col, Card, Alert } from 'react-bootstrap';
+import api from '../../api';
 
 const ProjectForm = ({ student, onSave, onCancel }) => {
   const [formData, setFormData] = useState({
@@ -78,10 +79,17 @@ const ProjectForm = ({ student, onSave, onCancel }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      onSave(formData);
+      // onSave(formData);
+      try{
+      const response = await api.post('/registrations',formData)
+      }
+      catch{(error)=>{
+        console.log(error);
+        
+      }}
     }
   };
 
