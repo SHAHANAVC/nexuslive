@@ -6,7 +6,7 @@ const groupMemberSchema = new Schema({
   name: { type: String },
   email: { type: String },
   phone: { type: String },
-  vnumber: { type: String } // ✅ Added register VNumber
+  regNumber: { type: String } 
 });
 
 const registrationSchema = new Schema({
@@ -142,7 +142,7 @@ const registrationSchema = new Schema({
   },
   modeOfCourse: {
     type: String,
-    enum: ["online", "offline"],
+    // enum: ["online", "offline"],
     required: function () {
       return this.category === "internship";
     }

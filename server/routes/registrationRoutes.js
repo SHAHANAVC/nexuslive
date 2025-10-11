@@ -1,9 +1,9 @@
 import express from "express";
 import {
   createRegistration,
-  getProjects,
-  getInternships,
-  getRegistrationById,
+  // getProjects,
+  // getInternships,
+  // getRegistrationById,
 } from "../controllers/registrationController.js";
 
 const router = express.Router();
@@ -12,12 +12,12 @@ const router = express.Router();
 router.post("/", createRegistration);
 
 // View all projects
-router.get("/projects", getProjects);
+// router.get("/projects", getProjects);
 
 // View all internships
-router.get("/internships", getInternships);
+// router.get("/internships", getInternships);
 
 // Get single registration
-router.get("/:id", getRegistrationById);
+// router.get("/:id", getRegistrationById);
 
 export default router;
