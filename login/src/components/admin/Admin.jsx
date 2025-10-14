@@ -19,6 +19,7 @@ import Settings from "./Settings";
 import Adminstudent from "./Adminstudent";
 import StaffRegistration from "../StaffRegistration";
 import AdminStaff from "./AdminStaff";
+import Payment from "./Payment"; // Adjust path if needed
 
 function Admin() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -33,6 +34,8 @@ function Admin() {
       // Add more cases as you create components
       case "adminstudent": return <Adminstudent/>
       case "staffs": return <AdminStaff/>
+      case "payment": // Add this new case for Payment
+      return <Payment />;
       case "tasks":
       case "calendar":
       case "reports":
@@ -69,6 +72,7 @@ function Admin() {
     { key: "dashboard", label: "Dashboard", icon: "speedometer2" },
     { key: "adminstudent", label: "Student", icon: "people" },
     { key: "staffs", label: "Staffs", icon: "people" },
+    { key: "payment", label: "Payment", icon: "credit-card" }, 
     { key: "tasks", label: "Tasks", icon: "check-square" },
     { key: "calendar", label: "Calendar", icon: "calendar" },
     { key: "reports", label: "Reports", icon: "graph-up" },

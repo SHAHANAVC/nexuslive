@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form, Row, Col, InputGroup, Badge, Alert } from 'react-bootstrap';
+import api from '../../api';
 
 const StaffRegistrationForm = ({ 
   show, 
@@ -88,7 +89,7 @@ const StaffRegistrationForm = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (validateForm()) {
@@ -98,6 +99,8 @@ const StaffRegistrationForm = ({
         email: staffData.email,
         phone: staffData.phone,
         department: staffData.department,
+        password: staffData.password,
+        confirmPassword: staffData.confirmPassword,
         designation: staffData.designation,
         qualification: staffData.qualification,
         dateOfJoining: staffData.dateOfJoining,
@@ -117,7 +120,15 @@ const StaffRegistrationForm = ({
       
       // Reset form
       resetForm();
-      
+      try{
+        const reqres = await api.post('/staff/register',newStaff)
+        console.log(reqres);
+        
+      }
+      catch(e){
+        console.log(e);
+        
+      }
       // Close modal after delay
       setTimeout(() => {
         setShowSuccessAlert(false);

@@ -1,30 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Container, Row, Col, Card, Button, Table, Form, InputGroup, Modal, Dropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import ProjectForm from './ProjectForm';
 import InternshipForm from './InternshipForm';
+import api from '../../api';
 
 const Adminstudent = () => {
   const [students, setStudents] = useState([]);
+  // const [student,setStudent] = useState()
   const [showForm, setShowForm] = useState(false);
   const [showTypeModal, setShowTypeModal] = useState(false);
   const [selectedType, setSelectedType] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [editingStudent, setEditingStudent] = useState(null);
   const [enrollmentFilter, setEnrollmentFilter] = useState('all');
+  console.log(enrollmentFilter);
+  
+  
   const navigate = useNavigate();
+  // const API_URL = 'http://localhost:8000/api/students/';
+
+
+  
+useEffect(() => {
+  fetchStudents();
+}, []);
+
+  const fetchStudents = async () => {
+  try {
+    const response = await api.get('/registrations')
+    setStudents(response.data.data);
+    console.log('Students fetched:', response.data);
+  } catch (error) {
+    console.error('Error fetching students:', error);
+  }
+};
+
 
   // Filter students based on search and enrollment type
   const filteredStudents = students.filter(student => {
     const matchesSearch = 
       student.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.college?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      student.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.institution?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.formId?.toLowerCase().includes(searchTerm.toLowerCase());
       student.formId?.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesEnrollment = 
       enrollmentFilter === 'all' || 
-      student.enrollmentType === enrollmentFilter;
+      student.category === enrollmentFilter;
 
     return matchesSearch && matchesEnrollment;
   });
@@ -48,7 +73,7 @@ const Adminstudent = () => {
         ...studentData,
         id: Date.now().toString(),
         formId: generateFormId(studentData.institution, selectedType),
-        enrollmentType: selectedType,
+        category: selectedType,
         name: selectedType === 'project' ? studentData.groupMembers?.[0]?.name : studentData.name
       };
       setStudents([...students, newStudent]);
@@ -61,7 +86,7 @@ const Adminstudent = () => {
 
   const handleEdit = (student) => {
     setEditingStudent(student);
-    setSelectedType(student.enrollmentType);
+    setSelectedType(student.category);
     setShowForm(true);
   };
 
@@ -107,28 +132,28 @@ const Adminstudent = () => {
               <i className="bi bi-person-fill"></i>
             </div>
             <div>
-              <h6 className="mb-0 fw-bold">{student.name}</h6>
+              <h6 className="mb-0 fw-bold">{student.name || student.projectName}</h6>
               <small className="text-light opacity-75">{student.formId}</small>
             </div>
           </div>
           <span 
             className={`badge ${
-              student.enrollmentType === 'project' 
+              student.category === 'project' 
                 ? 'bg-warning text-dark' 
                 : 'bg-primary'
             }`}
           >
-            {student.enrollmentType === 'project' ? 'Project' : 'Internship'}
+            {student.category === 'project' ? 'Project' : 'Internship'}
           </span>
         </div>
 
         {/* Course/Project Info */}
         <div className="mb-2">
           <small className="text-light opacity-75">
-            {student.enrollmentType === 'project' ? 'Project: ' : 'Course: '}
+            {student.category === 'project' ? 'Project: ' : 'Course: '}
           </small>
           <div className="fw-bold">
-            {student.enrollmentType === 'project' ? student.projectName : student.course}
+            {student.category === 'project' ? student.technologyName : student.course}
           </div>
         </div>
 
@@ -139,8 +164,8 @@ const Adminstudent = () => {
             <div className="small">{student.institution}</div>
           </Col>
           <Col xs={6}>
-            <small className="text-light opacity-75">Email</small>
-            <div className="small text-truncate">{student.email}</div>
+            <small className="text-light opacity-75">college</small>
+            <div className="small text-truncate">{student.college}</div>
           </Col>
         </div>
 
@@ -155,7 +180,7 @@ const Adminstudent = () => {
               <small className="text-light opacity-75">Technology</small>
               <div>
                 <span className="badge bg-info text-dark small">
-                  {student.technology}
+                  {student.technology || student.course}
                 </span>
               </div>
             </Col>
@@ -196,7 +221,7 @@ const Adminstudent = () => {
     </Card>
   );
 
-  // Desktop Table Row with click handler
+  // Desktop Table Row with click handler=========================================================================================================
   const DesktopTableRow = ({ student }) => (
     <tr 
       key={student.id} 
@@ -220,33 +245,34 @@ const Adminstudent = () => {
             <i className="bi bi-person-fill"></i>
           </div>
           <div>
-            <div className="fw-bold">{student.name}</div>
+            <div className="fw-bold">{student.name || student.projectName}</div>
             <small className="text-light opacity-75">{student.regNumber}</small>
           </div>
         </div>
       </td>
       <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>{student.institution}</td>
-      <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>{student.email}</td>
+      <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>{student.college}</td>
       <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>{student.dateOfJoining}</td>
+      <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>{student.modeOfCourse}</td>
       <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>
-        {student.enrollmentType === 'project' ? student.projectName : student.course}
+        {student.category === 'project' ? student.technology : student.course}
       </td>
-      <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>
+      {/* <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>
         {student.technology && (
           <span className="badge bg-info text-dark">
             {student.technology}
           </span>
         )}
-      </td>
+      </td> */}
       <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>
         <span 
           className={`badge ${
-            student.enrollmentType === 'project' 
+            student.category === 'project' 
               ? 'bg-warning text-dark' 
               : 'bg-primary'
           }`}
         >
-          {student.enrollmentType}
+          {student.category}
         </span>
       </td>
       <td style={{borderColor: 'rgba(255,255,255,0.1)'}} onClick={(e) => e.stopPropagation()}>
@@ -325,7 +351,7 @@ const Adminstudent = () => {
               <div className="d-flex justify-content-between align-items-center">
                 <div>
                   <h4 className="mb-0 fs-6 fs-md-4">
-                    {students.filter(s => s.enrollmentType === 'project').length}
+                    {students.filter(s => s.category === 'project').length}
                   </h4>
                   <small className="text-light">Project Students</small>
                 </div>
@@ -340,7 +366,7 @@ const Adminstudent = () => {
               <div className="d-flex justify-content-between align-items-center">
                 <div>
                   <h4 className="mb-0 fs-6 fs-md-4">
-                    {students.filter(s => s.enrollmentType === 'internship').length}
+                    {students.filter(s => s.category === 'internship').length}
                   </h4>
                   <small className="text-light">Internship Students</small>
                 </div>
@@ -467,10 +493,11 @@ const Adminstudent = () => {
                           <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Form ID</th>
                           <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Name</th>
                           <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Institute</th>
-                          <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Email</th>
+                          <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>College</th>
                           <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Date of Joining</th>
-                          <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Course/Project</th>
+                          <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Mode</th>
                           <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Technology</th>
+                          {/* <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Technology</th> */}
                           <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Type</th>
                           <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Actions</th>
                         </tr>

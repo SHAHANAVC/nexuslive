@@ -602,7 +602,7 @@ const AdminStaff = () => {
       </div>
 
       {/* Responsive CSS */}
-      <style jsx>{`
+      <style>{`
         .staff-list-page {
           width: 100%;
           min-height: 100vh;

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Form, Button, Row, Col, Card, Alert } from 'react-bootstrap';
 import api from '../../api';
+import { useNavigate } from 'react-router-dom';
 
 const ProjectForm = ({ student, onSave, onCancel }) => {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     category: 'project',
     institution: student?.institution || '',
@@ -12,6 +14,7 @@ const ProjectForm = ({ student, onSave, onCancel }) => {
     technology: student?.technology || '',
     projectName: student?.projectName || '',
     department: student?.department || '',
+    modeOfCourse: student?.modeOfCourse || '',
     description: student?.description || '',
     groupMembers: student?.groupMembers || [
       { name: '', email: '', phone: '', regNumber: '' }
@@ -66,6 +69,7 @@ const ProjectForm = ({ student, onSave, onCancel }) => {
     if (!formData.fees) newErrors.fees = 'Fees is required';
     if (!formData.technology) newErrors.technology = 'Technology is required';
     if (!formData.projectName) newErrors.projectName = 'Project name is required';
+    if (!formData.modeOfCourse) newErrors.modeOfCourse = 'Mode of course required'
     if (!formData.department) newErrors.department = 'Department is required';
 
     // Validate group members
@@ -73,6 +77,7 @@ const ProjectForm = ({ student, onSave, onCancel }) => {
       if (!member.name) newErrors[`memberName_${index}`] = `Member ${index + 1} name is required`;
       if (!member.email) newErrors[`memberEmail_${index}`] = `Member ${index + 1} email is required`;
       if (!member.phone) newErrors[`memberPhone_${index}`] = `Member ${index + 1} phone is required`;
+      if (!member.regNumber) newErrors[`memberRegno_${index}`] = `Member ${index + 1} Reg No is required`;
     });
 
     setErrors(newErrors);
@@ -85,9 +90,15 @@ const ProjectForm = ({ student, onSave, onCancel }) => {
       // onSave(formData);
       try{
       const response = await api.post('/registrations',formData)
+      console.log(response);
+      alert(response.data.message)
+      navigate('/')
+
+      
       }
       catch{(error)=>{
         console.log(error);
+        alert(error.response.data.message)
         
       }}
     }
@@ -229,6 +240,26 @@ const ProjectForm = ({ student, onSave, onCancel }) => {
             </Form.Group>
           </Col>
 
+          <Col md={6}>
+                      <Form.Group>
+                        <Form.Label>Mode of Course *</Form.Label>
+                        <Form.Select
+                          name="modeOfCourse"
+                          value={formData.modeOfCourse}
+                          onChange={handleChange}
+                          isInvalid={!!errors.modeOfCourse}
+                          className="bg-dark text-white"
+                        >
+                          <option value="">Select Mode</option>
+                          <option value="Detailed">Detailed</option>
+                          <option value="Fastrack">Fastrack</option>
+                        </Form.Select>
+                        <Form.Control.Feedback type="invalid">
+                          {errors.modeOfCourse}
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Col>
+
           <Col md={12}>
             <Form.Group>
               <Form.Label>Project Description</Form.Label>
@@ -314,9 +345,13 @@ const ProjectForm = ({ student, onSave, onCancel }) => {
                       type="text"
                       value={member.regNumber}
                       onChange={(e) => handleGroupMemberChange(index, 'regNumber', e.target.value)}
+                      isInvalid={!!errors[`memberRegno_${index}`]}
                       className="bg-dark text-white"
                       placeholder="Reg number"
                     />
+                    <Form.Control.Feedback type="invalid">
+                      {errors[`memberRegno_${index}`]}
+                    </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
                 <Col md={1} className="d-flex align-items-end">
