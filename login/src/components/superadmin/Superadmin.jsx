@@ -15,6 +15,7 @@ import {
 } from "react-bootstrap";
 import Dashboard from "./Dashboard";
 import AdminStaff from "../admin/AdminStaff";
+import ViewStaff from "./ViewStaff";
 // import StaffRegistration from "../StaffRegistration";
 
 function Superadmin() {
@@ -26,7 +27,7 @@ function Superadmin() {
       case "dashboard":
         return <Dashboard />;
       // Add more cases as you create components
-      case "staffs": return <AdminStaff/>
+      case "staffs": return <ViewStaff/>
         case "settings":
       case "projects":
       case "tasks":

@@ -3,8 +3,11 @@ import React, { useState } from 'react';
 import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import api from '../../api';
 import { useNavigate } from "react-router-dom";
+import  { useMemo } from 'react';
 const InternshipForm = ({ student, onSave, onCancel }) => {
   const navigate = useNavigate();
+  const [showCollegeDropdown, setShowCollegeDropdown] = useState(false);
+    const [collegeSearch, setCollegeSearch] = useState('');
   console.log(student);
   
   const [formData, setFormData] = useState({
@@ -30,7 +33,248 @@ const InternshipForm = ({ student, onSave, onCancel }) => {
     preferredDuration : student?.preferredDuration || '',
   });
 
+  // College list data
+    const collegeList = useMemo(() => [
+      "AWH ENGG KUTTIKKATTOOR",
+      "KMCT ENGG KALLANTHODE",
+      "MANIYOOR ENGG",
+      "UNIVERSITY ENGG",
+      "MDIT ULLIYERI",
+      "VEDAVYASA KARAD",
+      "KMCT WOMENS KALLANTHODE",
+      "GEC CALICUT WESTHILL",
+      "MGM VALANCHERY",
+      "EKC MANJERY",
+      "MEA PERINTHALMANNA",
+      "MES KUTTIPPURAM",
+      "GEC WAYANAD",
+      "GEC IDUKKI",
+      "THEJUS",
+      "IES CHITTILAPPILI",
+      "AXIS",
+      "UNIVERSAL VALLIVATTOM",
+      "MALABAR PALLUR",
+      "JYOTHI CHERUTHURUTHI",
+      "NIRMALA COLLEGE KUNNAPPILLI",
+      "SAHRDAYA KODAKARA",
+      "MET MALA",
+      "FOCUS POOMALA",
+      "ICCS NADIPPARA",
+      "HOLY GRACE THIRUVILLAMALA",
+      "CHRIST IRINGALAKKUDA",
+      "CYRIX",
+      "SCMS KARUKUTTY",
+      "VIDHYA",
+      "NEHRU THRISSUR",
+      "GEC THRISSUR",
+      "ROYAL ENGG",
+      "IMT POTTORE",
+      "SREE ERNAKULATHAPPAN COLLEGE",
+      "GEC KANNUR",
+      "LBS KAZARGOD",
+      "THRIKKARIPUR ENGG",
+      "THALASSERY ENGG",
+      "MIT ANJARAKKANDI",
+      "VIMAL JYOTHI",
+      "NSS PALAKKAD",
+      "GEC PALAKKAD",
+      "AL AMEEN",
+      "AMMINI",
+      "ARYANET",
+      "AHALYA",
+      "JAWAHARLAL COLLEGE",
+      "PRIME COLLEGE",
+      "SREEPATHI PATAMBI",
+      "IHRD KOOTHPARAMBA",
+      "IHRD PINARAY",
+      "IHRD NERUVAMBRAM",
+      "IHRD PATTUVAM",
+      "IHRD MANANTHAVADI",
+      "IHRD CHEEMENI",
+      "IHRD MANJESWARAM",
+      "THALIPARAMB ARTS",
+      "OUR COLLEGE",
+      "FAROOK COLLEGE",
+      "PROVIDENCE COLLEGE",
+      "DEVAGIRI MEDICAL COLLEGE",
+      "SNDP KOLLAM",
+      "SD SABOO VELLANNOOR",
+      "AWH SPECIAL KALLAI",
+      "SALAFI MEPPAYYUR",
+      "MES VADAKARA",
+      "DAYAPURAM MUKKAM",
+      "MET NADAPURAM",
+      "SN COLLEGE VADAKARA",
+      "BAITHUL IZA NARIKKUNI",
+      "MHES CHERANDATHUR",
+      "JDT VELLIMADUKUNN",
+      "MES MUKKOM",
+      "NATIONAL PULIYAV",
+      "DARUL HUDA NADAPURAM",
+      "SILVER ARTS PERAMBRA",
+      "PEE KEY NALLALAM",
+      "MALABAR MOODADI",
+      "IHRD NADAPURAM",
+      "IHRD MUKKOM",
+      "IHRD THAMARASSERY",
+      "HI-TECH NADAPURAM",
+      "SMI ARTS & SCIENCE CHOMBALA",
+      "GURUDEV KOYILANDI",
+      "CCSIT VADAKARA",
+      "MAPS VADAKARA",
+      "ILAHIYA KOYILANDI",
+      "MES PONNANI",
+      "MARTHOMA CHUNGATHARA",
+      "UNITY MANJERY",
+      "MES KAVEEYAM VALANCHERY",
+      "EMEA KONDOTTY",
+      "SULLAMUSSALAM ARECODE",
+      "AMAL COLLEGE NILAMBUR",
+      "MAJILIS VALANCHERY",
+      "SNDP PERINTHALMANNA",
+      "HM MANJEY",
+      "REGIONAL COLLEGE KUZHIMANNA",
+      "JAMIYA NADAWIYA EDAVANNA",
+      "GRACE VALLEY KADAMPUZHA",
+      "ASSABAH VALAYAMKULAM",
+      "KHIDMATH THIRUNAVAYA",
+      "GEMS PERINTHALMANNA",
+      "SAFA EDAYUR",
+      "IDEAL KUTTIPPURAM",
+      "AL JAMIA PATTIKKAD",
+      "ST MARYS ANGADIPURAM",
+      "BLOSSOM PULIKAL",
+      "NOBLE WOMENS MANJERI",
+      "PRIYADARSHINI MELMURI",
+      "MIC VALLUVAMBRAM",
+      "NASRA THIRURKAD",
+      "ISS PERINTHALMANNA",
+      "TANUR ARTS MALAPPURAM",
+      "SAHYA ARTS WANDOOR",
+      "PANAKKAD POOKOYA THANGAL MEMORIAL VENGARA",
+      "MALABAR, MANUR, CHEGANUR ROAD",
+      "EXTER COLLEGE MANJERI",
+      "MAULANA COLLEGE TIRUR",
+      "FATHIMA ARTS NILAMBUR",
+      "IHRD - MALAPPURAM",
+      "IHRD -EDAPAL",
+      "IHRD - VAZHAKKAD",
+      "IHRD MUTHUVALLUR",
+      "BYK PUTHANATHANI",
+      "KR SREENARAYANA VALANCHERI",
+      "MODEL IHRD PARAPPANANGADI",
+      "MALABAR VENGARA",
+      "NMSM COLLEGE KALPETTA",
+      "ST MARYS BATHERY",
+      "WMO MUTTIL",
+      "DONBOSCO BATHERY",
+      "CM PANAMARAM",
+      "SNDP PULPALLY",
+      "ALPHONSA BATHERY",
+      "IHRD - MEENANGADI",
+      "LIZA KAITHAPPOYIL",
+      "GREEN MOUNT PADINHARATHARA",
+      "GOV VICTORIA COLLEGE ,PALAKKAD",
+      "GOV COLLEGE , CHITTUR",
+      "NSS COLLEGE ,OTTAPPALAM",
+      "GLOBAL",
+      "BHARATH",
+      "MERCY COLLEGE PALAKKAD",
+      "NSS COLLEGE NENMARA",
+      "MES KALADI",
+      "SREEKRISHNAPURAM BTB",
+      "VV COLLEGE KANJIKODE",
+      "THUNCHATH EZHUTHACHAN CLG",
+      "YUVAKSHETHRA INSTITUTE",
+      "MOUNT SEENA COLLEGE OTTAPALAM",
+      "IDEAL CHERPULASSERY",
+      "CHERPULASSERY COLLEGE KARALMANNA",
+      "ASPIRE THRITHALA",
+      "SADANAM KUMARAN MANKARA",
+      "SNES KALLYANI OTTAPPALAM",
+      "NETHAJI MEMORIAL NENMARA",
+      "SREENARAYANA GURU COLLEGE ALATHUR",
+      "KSHM EDATHANATTUKARA",
+      "NAJATH NELLIPPUZHA",
+      "UNIVERSAL COLLEGE MANNARKKAD",
+      "BARATHAMATHA KOZHINJAMPARA",
+      "LEMENT PATAMBI",
+      "LIONS ALATHUR",
+      "IHRD VADAKKANCHERY",
+      "IHRD MALAMBUZHA",
+      "IHRD KOTTAYI",
+      "IHRD ATTAPPADI",
+      "IHRD AVALUR",
+      "SRI ATHUTHAMENON KUTTANELLUR",
+      "ST THOMAS",
+      "ASPIRE PATTAMBI",
+      "VIMALA COLLEGE",
+      "ST MARRYS",
+      "SREEKERALA VARMA",
+      "LITTLE FLOWER GURUVAYOOR",
+      "ST JOSEPH IRINGALAKKUDA",
+      "CHRIST IRINGALAKKUDA",
+      "MES ASMABI VEMBALLOOR",
+      "CARMEL MALA",
+      "MAR DIONYSIUS PAZHANJI",
+      "NAIPUNYA KORATTY",
+      "MOTHER ARTS AND SCIENCE , POOVATHUR",
+      "ICA THOZHIYUR",
+      "ANSAR PERUMBILAV",
+      "DONBOSCO MANNUTHY",
+      "SN NATTIKA",
+      "THRANANELLUR ARTS AND SCIENCE IRINGALAKKUDA",
+      "PARAMEKKAV AYYANTHOLE",
+      "MAR OSTHATHEOUS PERUMBILAV",
+      "ELIMS COLLEGE",
+      "NIRMALA COLLEGE KUNNAPPILLY",
+      "MET KURIVILLASERY MALA",
+      "IHRD NATTIKA",
+      "IHRD KODUNGALLUR",
+      "IHRD CHELAKKARA",
+      "Other"
+    ], []);
+  
+    // Filter colleges based on search input
+    const filteredColleges = useMemo(() => {
+      if (!collegeSearch) return collegeList;
+      return collegeList.filter(college => 
+        college.toLowerCase().includes(collegeSearch.toLowerCase())
+      );
+    }, [collegeSearch, collegeList]);
+
   const [errors, setErrors] = useState({});
+
+  const handleCollegeSelect = (college) => {
+    setFormData(prev => ({
+      ...prev,
+      collegeName: college
+    }));
+    setCollegeSearch('');
+    setShowCollegeDropdown(false);
+  };
+
+  const handleCollegeInputChange = (e) => {
+    const value = e.target.value;
+    setCollegeSearch(value);
+    setFormData(prev => ({
+      ...prev,
+      collegeName: value
+    }));
+    setShowCollegeDropdown(true);
+  };
+
+  const handleCollegeInputFocus = () => {
+    setShowCollegeDropdown(true);
+    if (formData.collegeName) {
+      setCollegeSearch(formData.collegeName);
+    }
+  };
+
+  const handleCollegeInputBlur = () => {
+    // Delay hiding dropdown to allow for click selection
+    setTimeout(() => setShowCollegeDropdown(false), 200);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,6 +282,9 @@ const InternshipForm = ({ student, onSave, onCancel }) => {
       ...prev,
       [name]: value
     }));
+
+
+    
 
     // Auto-calculate age if DOB is changed
     if (name === 'dob' && value) {
@@ -142,7 +389,7 @@ const InternshipForm = ({ student, onSave, onCancel }) => {
             </Form.Group>
           </Col>
 
-          <Col md={6}>
+          {/* <Col md={6}>
             <Form.Group>
               <Form.Label>College Name *</Form.Label>
               <Form.Control
@@ -157,7 +404,65 @@ const InternshipForm = ({ student, onSave, onCancel }) => {
                 {errors.collegeName}
               </Form.Control.Feedback>
             </Form.Group>
-          </Col>
+          </Col> */}
+          <Col md={6}>
+                      <Form.Group className="position-relative">
+                        <Form.Label>College Name *</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="collegeName"
+                          value={formData.collegeName}
+                          onChange={handleCollegeInputChange}
+                          onFocus={handleCollegeInputFocus}
+                          onBlur={handleCollegeInputBlur}
+                          isInvalid={!!errors.collegeName}
+                          className="bg-dark text-white"
+                          placeholder="Type to search colleges..."
+                          autoComplete="off"
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {errors.collegeName}
+                        </Form.Control.Feedback>
+                        
+                        {/* College Dropdown */}
+                        {showCollegeDropdown && (
+                          <div 
+                            className="position-absolute w-100 bg-dark border border-secondary mt-1 rounded shadow-lg z-3"
+                            style={{
+            maxHeight: '200px',
+            overflowY: 'auto',
+            scrollbarWidth: 'none',        
+            msOverflowStyle: 'none',        
+          }}
+          
+                          >
+                            {filteredColleges.length > 0 ? (
+                              filteredColleges.map((college, index) => (
+                                <div
+                                  key={index}
+                                  className="dropdown-item text-white p-2"
+                                  style={{ 
+                                    cursor: 'pointer',
+                                    borderBottom: '1px solid #444',
+                                    fontFamily: 'Inter, sans-serif'
+                                  }}
+                                  onMouseDown={(e) => e.preventDefault()} // Prevent blur on mousedown
+                                  onClick={() => handleCollegeSelect(college)}
+                                  onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(255,255,255,0.1)'}
+                                  onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                                >
+                                  {college}
+                                </div>
+                              ))
+                            ) : (
+                              <div className="dropdown-item text-white p-2 text-center">
+                                No colleges found
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </Form.Group>
+                    </Col>
 
         <Col md={6}>
             <Form.Group>

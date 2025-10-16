@@ -14,6 +14,7 @@ import StudentDetails from "./components/admin/StudentDetails";
 import StaffRegistration from "./components/StaffRegistration";
 import ViewStaff from "./components/superadmin/ViewStaff";
 
+
 function App() {
   return (
     <>

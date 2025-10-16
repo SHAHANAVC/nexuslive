@@ -4,6 +4,7 @@ import {
   Modal, Dropdown, Pagination, Alert 
 } from 'react-bootstrap';
 import StaffRegistrationForm from './StaffRegistraionForm'; // Adjust import path as needed
+import api from '../../api';
 
 const AdminStaff = () => {
   const [staffMembers, setStaffMembers] = useState([]);
@@ -21,8 +22,7 @@ const AdminStaff = () => {
 
   // Departments, designations, qualifications arrays
   const departments = [
-    'Administration', 'Academic', 'Technical', 'Human Resources', 
-    'Finance', 'Marketing', 'IT Support', 'Research & Development'
+    'Technical', 'Marketing'
   ];
 
   const designations = [
@@ -37,69 +37,69 @@ const AdminStaff = () => {
   ];
 
   // Initialize mock data
-  useEffect(() => {
-    const mockStaff = [
-      {
-        id: 1,
-        name: 'John Smith',
-        email: 'john.smith@company.com',
-        phone: '1234567890',
-        department: 'Administration',
-        designation: 'Manager',
-        qualification: "Master's Degree",
-        dateOfJoining: '2020-01-15',
-        status: 'active',
-        address: '123 Main St, City, State',
-        emergencyContact: '0987654321',
-        documents: []
-      },
-      {
-        id: 2,
-        name: 'Sarah Johnson',
-        email: 'sarah.j@company.com',
-        phone: '2345678901',
-        department: 'Academic',
-        designation: 'Senior Staff',
-        qualification: "PhD",
-        dateOfJoining: '2019-03-20',
-        status: 'active',
-        address: '456 Oak Ave, City, State',
-        emergencyContact: '9876543210',
-        documents: []
-      },
-      {
-        id: 3,
-        name: 'Mike Chen',
-        email: 'mike.chen@company.com',
-        phone: '3456789012',
-        department: 'IT Support',
-        designation: 'Technical Lead',
-        qualification: "Bachelor's Degree",
-        dateOfJoining: '2021-06-10',
-        status: 'probation',
-        address: '789 Pine Rd, City, State',
-        emergencyContact: '8765432109',
-        documents: []
-      },
-      {
-        id: 4,
-        name: 'Emily Davis',
-        email: 'emily.davis@company.com',
-        phone: '4567890123',
-        department: 'Human Resources',
-        designation: 'Coordinator',
-        qualification: "Master's Degree",
-        dateOfJoining: '2018-11-05',
-        status: 'active',
-        address: '321 Elm St, City, State',
-        emergencyContact: '7654321098',
-        documents: []
-      }
-    ];
+  // useEffect(() => {
+  //   const mockStaff = [
+  //     {
+  //       id: 1,
+  //       name: 'John Smith',
+  //       email: 'john.smith@company.com',
+  //       phone: '1234567890',
+  //       department: 'Administration',
+  //       designation: 'Manager',
+  //       qualification: "Master's Degree",
+  //       dateOfJoining: '2020-01-15',
+  //       status: 'active',
+  //       address: '123 Main St, City, State',
+  //       emergencyContact: '0987654321',
+  //       documents: []
+  //     },
+  //     {
+  //       id: 2,
+  //       name: 'Sarah Johnson',
+  //       email: 'sarah.j@company.com',
+  //       phone: '2345678901',
+  //       department: 'Academic',
+  //       designation: 'Senior Staff',
+  //       qualification: "PhD",
+  //       dateOfJoining: '2019-03-20',
+  //       status: 'active',
+  //       address: '456 Oak Ave, City, State',
+  //       emergencyContact: '9876543210',
+  //       documents: []
+  //     },
+  //     {
+  //       id: 3,
+  //       name: 'Mike Chen',
+  //       email: 'mike.chen@company.com',
+  //       phone: '3456789012',
+  //       department: 'IT Support',
+  //       designation: 'Technical Lead',
+  //       qualification: "Bachelor's Degree",
+  //       dateOfJoining: '2021-06-10',
+  //       status: 'probation',
+  //       address: '789 Pine Rd, City, State',
+  //       emergencyContact: '8765432109',
+  //       documents: []
+  //     },
+  //     {
+  //       id: 4,
+  //       name: 'Emily Davis',
+  //       email: 'emily.davis@company.com',
+  //       phone: '4567890123',
+  //       department: 'Human Resources',
+  //       designation: 'Coordinator',
+  //       qualification: "Master's Degree",
+  //       dateOfJoining: '2018-11-05',
+  //       status: 'active',
+  //       address: '321 Elm St, City, State',
+  //       emergencyContact: '7654321098',
+  //       documents: []
+  //     }
+  //   ];
     
-    setStaffMembers(mockStaff);
-    setFilteredStaff(mockStaff);
-  }, []);
+  //   setStaffMembers(mockStaff);
+  //   setFilteredStaff(mockStaff);
+  // }, []);
 
   // Filter staff based on search and filters
   useEffect(() => {
@@ -186,6 +186,24 @@ const AdminStaff = () => {
       default: return 'secondary';
     }
   };
+
+
+  useEffect(()=>{fetchStaffs()},[])
+
+  const fetchStaffs = async ()=>{
+    try{
+    const reqres = await api.get('/staff/all')
+    console.log(reqres);
+    setStaffMembers(reqres.data.staff);
+    }
+    catch(e){
+      console.log(e);
+      
+    }
+
+    }
+
+
 
   return (
     <div className="staff-list-page">
@@ -375,8 +393,8 @@ const AdminStaff = () => {
                     <th className="border-secondary d-none d-sm-table-cell">Designation</th>
                     <th className="border-secondary d-none d-lg-table-cell">Qualification</th>
                     <th className="border-secondary d-none d-sm-table-cell">Join Date</th>
-                    <th className="border-secondary">Status</th>
-                    <th className="border-secondary text-center">Actions</th>
+                    {/* <th className="border-secondary">Status</th> */}
+                    {/* <th className="border-secondary text-center">Actions</th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -401,15 +419,15 @@ const AdminStaff = () => {
                         <td className="border-secondary d-none d-sm-table-cell">
                           {new Date(staff.dateOfJoining).toLocaleDateString()}
                         </td>
-                        <td className="border-secondary">
+                        {/* <td className="border-secondary">
                           <Badge bg={getStatusVariant(staff.status)} className="fs-6">
                             <span className="d-none d-sm-inline">{staff.status.toUpperCase()}</span>
                             <span className="d-sm-none">
                               {staff.status === 'active' ? 'A' : staff.status === 'probation' ? 'P' : 'R'}
                             </span>
                           </Badge>
-                        </td>
-                        <td className="border-secondary text-center">
+                        </td> */}
+                        {/* <td className="border-secondary text-center">
                           <Dropdown>
                             <Dropdown.Toggle 
                               variant="outline-light" 
@@ -430,7 +448,7 @@ const AdminStaff = () => {
                               </Dropdown.Item>
                               <Dropdown.Item 
                                 className="d-flex align-items-center gap-2"
-                              onClick={() => {/* Edit functionality */}}
+                              onClick={() => {}}
                               >
                                 <i className="bi bi-pencil"></i>
                                 Edit Staff
@@ -460,7 +478,7 @@ const AdminStaff = () => {
                               </Dropdown.Item>
                             </Dropdown.Menu>
                           </Dropdown>
-                        </td>
+                        </td> */}
                       </tr>
                     ))
                   ) : (

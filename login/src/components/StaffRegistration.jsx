@@ -23,28 +23,22 @@ const StaffRegistration = () => {
   const [documentFiles, setDocumentFiles] = useState([]);
 
   const departments = [
-    'Administration',
-    'Academic',
     'Technical',
-    'Human Resources',
-    'Finance',
-    'Marketing',
-    'IT Support',
-    'Research & Development'
+    'Marketing'
   ];
 
-  const designations = [
-    'Manager',
-    'Supervisor',
-    'Senior Staff',
-    'Junior Staff',
-    'Technical Lead',
-    'Developer',
-    'Analyst',
-    'Coordinator',
-    'Specialist',
-    'Assistant'
-  ];
+  // const designations = [
+  //   'Manager',
+  //   'Supervisor',
+  //   'Senior Staff',
+  //   'Junior Staff',
+  //   'Technical Lead',
+  //   'Developer',
+  //   'Analyst',
+  //   'Coordinator',
+  //   'Specialist',
+  //   'Assistant'
+  // ];
 
   const qualifications = [
     'High School',

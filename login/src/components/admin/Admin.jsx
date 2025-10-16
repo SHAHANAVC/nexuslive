@@ -20,6 +20,7 @@ import Adminstudent from "./Adminstudent";
 import StaffRegistration from "../StaffRegistration";
 import AdminStaff from "./AdminStaff";
 import Payment from "./Payment"; // Adjust path if needed
+import PaymentView from "./ViewPayment";
 
 function Admin() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -35,8 +36,8 @@ function Admin() {
       case "adminstudent": return <Adminstudent/>
       case "staffs": return <AdminStaff/>
       case "payment": // Add this new case for Payment
-      return <Payment />;
-      case "tasks":
+      return <PaymentView/>;
+      case "tasks": 
       case "calendar":
       case "reports":
         // Return a placeholder or actual component

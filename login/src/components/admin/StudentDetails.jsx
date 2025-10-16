@@ -2,7 +2,7 @@ import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button, Badge, Table } from 'react-bootstrap';
 
-const StudentDetails = () => {
+const   StudentDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { student } = location.state || {};
@@ -24,10 +24,10 @@ const StudentDetails = () => {
     );
   }
 
-  const isProject = student.enrollmentType === 'project';
+  const isProject = student.category === 'project';
 
   return (
-    <Container fluid className="px-2 px-md-3 py-3">
+    <Container fluid className="px-2 px-md-3 py-3 bg-dark">
       {/* Header */}
       <Row className="mb-4">
         <Col>
@@ -61,7 +61,7 @@ const StudentDetails = () => {
 
       <Row className="g-4">
         {/* Basic Information */}
-        <Col lg={8}>
+        {/* <Col lg={8}>
           <Card className="bg-dark text-white h-100">
             <Card.Header className="border-secondary">
               <h5 className="mb-0">
@@ -80,7 +80,7 @@ const StudentDetails = () => {
                 <Col sm={6}>
                   <div className="border-bottom border-secondary pb-2">
                     <small className="text-light opacity-75">Name</small>
-                    <div className="fw-bold">{student.name}</div>
+                    <div className="fw-bold">{student.name || student.projectName}</div>
                   </div>
                 </Col>
                 <Col sm={6}>
@@ -92,7 +92,7 @@ const StudentDetails = () => {
                 <Col sm={6}>
                   <div className="border-bottom border-secondary pb-2">
                     <small className="text-light opacity-75">College</small>
-                    <div className="fw-bold">{student.collegeName}</div>
+                    <div className="fw-bold">{student.college}</div>
                   </div>
                 </Col>
                 <Col sm={6}>
@@ -109,7 +109,6 @@ const StudentDetails = () => {
                 </Col>
               </Row>
 
-              {/* Project Specific Details */}
               {isProject && (
                 <>
                   <hr className="border-secondary my-4" />
@@ -148,7 +147,6 @@ const StudentDetails = () => {
                 </>
               )}
 
-              {/* Internship Specific Details */}
               {!isProject && (
                 <>
                   <hr className="border-secondary my-4" />
@@ -177,8 +175,8 @@ const StudentDetails = () => {
                     </Col>
                     <Col sm={6}>
                       <div className="border-bottom border-secondary pb-2">
-                        <small className="text-light opacity-75">University</small>
-                        <div className="fw-bold">{student.university}</div>
+                        <small className="text-light opacity-75">Duraction</small>
+                        <div className="fw-bold">{student.preferredDuration}</div>
                       </div>
                     </Col>
                   </Row>
@@ -186,11 +184,147 @@ const StudentDetails = () => {
               )}
             </Card.Body>
           </Card>
+        </Col> */}
+
+        <Col lg={isProject ? 12 : 8}>
+  <Card className="bg-dark text-white h-100">
+    <Card.Header className="border-secondary">
+      <h5 className="mb-0">
+        <i className="bi bi-person me-2"></i>
+        Basic Information
+      </h5>
+    </Card.Header>
+    <Card.Body>
+      <Row className="g-3">
+        <Col sm={6}>
+          <div className="border-bottom border-secondary pb-2">
+            <small className="text-light opacity-75">Form ID</small>
+            <div className="fw-bold text-info">{student.formId}</div>
+          </div>
         </Col>
+        <Col sm={6}>
+          <div className="border-bottom border-secondary pb-2">
+            <small className="text-light opacity-75">Name</small>
+            <div className="fw-bold">{student.name || student.projectName}</div>
+          </div>
+        </Col>
+        <Col sm={6}>
+          <div className="border-bottom border-secondary pb-2">
+            <small className="text-light opacity-75">Institution</small>
+            <div className="fw-bold text-capitalize">{student.institution}</div>
+          </div>
+        </Col>
+        <Col sm={6}>
+          <div className="border-bottom border-secondary pb-2">
+            <small className="text-light opacity-75">College</small>
+            <div className="fw-bold">{student.college}</div>
+          </div>
+        </Col>
+        <Col sm={6}>
+          <div className="border-bottom border-secondary pb-2">
+            <small className="text-light opacity-75">Date of Joining</small>
+            <div className="fw-bold">{student.dateOfJoining}</div>
+          </div>
+        </Col>
+        <Col sm={6}>
+          <div className="border-bottom border-secondary pb-2">
+            <small className="text-light opacity-75">Fees</small>
+            <div className="fw-bold text-success">₹{student.fees}</div>
+          </div>
+        </Col>
+      </Row>
+
+      {/* Project Specific Details */}
+      {isProject && (
+        <>
+          <hr className="border-secondary my-4" />
+          <h6 className="mb-3 text-warning">
+            <i className="bi bi-folder me-2"></i>
+            Project Details
+          </h6>
+          <Row className="g-3">
+            <Col sm={6}>
+              <div className="border-bottom border-secondary pb-2">
+                <small className="text-light opacity-75">Project Name</small>
+                <div className="fw-bold">{student.projectName}</div>
+              </div>
+            </Col>
+            <Col sm={6}>
+              <div className="border-bottom border-secondary pb-2">
+                <small className="text-light opacity-75">Technology</small>
+                <div>
+                  <Badge bg="info" className="text-dark">{student.technology}</Badge>
+                </div>
+              </div>
+            </Col>
+            <Col sm={6}>
+              <div className="border-bottom border-secondary pb-2">
+                <small className="text-light opacity-75">Department</small>
+                <div className="fw-bold">{student.department}</div>
+              </div>
+            </Col>
+            <Col xs={6}>
+              <div className="border-bottom border-secondary pb-2">
+                <small className="text-light opacity-75">Mode of course</small>
+                <div className="fw-bold mt-1">{student.modeOfCourse || 'No Mode Of Course provided'}</div>
+              </div>
+            </Col>
+            <Col xs={12}>
+              <div className="border-bottom border-secondary pb-2">
+                <small className="text-light opacity-75">Description</small>
+                <div className="fw-bold mt-1">{student.description || 'No description provided'}</div>
+              </div>
+            </Col>
+
+            
+          </Row>
+        </>
+      )}
+
+      {/* Internship Specific Details */}
+      {!isProject && (
+        <>
+          <hr className="border-secondary my-4" />
+          <h6 className="mb-3 text-info">
+            <i className="bi bi-briefcase me-2"></i>
+            Internship Details
+          </h6>
+          <Row className="g-3">
+            <Col sm={6}>
+              <div className="border-bottom border-secondary pb-2">
+                <small className="text-light opacity-75">Course</small>
+                <div className="fw-bold">{student.course}</div>
+              </div>
+            </Col>
+            <Col sm={6}>
+              <div className="border-bottom border-secondary pb-2">
+                <small className="text-light opacity-75">Mode of Course</small>
+                <div className="fw-bold">{student.modeOfCourse}</div>
+              </div>
+            </Col>
+            <Col sm={6}>
+              <div className="border-bottom border-secondary pb-2">
+                <small className="text-light opacity-75">Qualification</small>
+                <div className="fw-bold">{student.qualification}</div>
+              </div>
+            </Col>
+            <Col sm={6}>
+              <div className="border-bottom border-secondary pb-2">
+                <small className="text-light opacity-75">Duration</small>
+                <div className="fw-bold">{student.preferredDuration}</div>
+              </div>
+            </Col>
+          </Row>
+        </>
+      )}
+    </Card.Body>
+  </Card>
+</Col>
+
 
         {/* Contact & Additional Information */}
-        <Col lg={4}>
-          {/* Contact Information */}
+        {/* <Col lg={4}>
+         
           <Card className="bg-dark text-white mb-4">
             <Card.Header className="border-secondary">
               <h6 className="mb-0">
@@ -240,7 +374,6 @@ const StudentDetails = () => {
             </Card.Body>
           </Card>
 
-          {/* Personal Information (Internship) */}
           {!isProject && (
             <Card className="bg-dark text-white">
               <Card.Header className="border-secondary">
@@ -263,7 +396,85 @@ const StudentDetails = () => {
               </Card.Body>
             </Card>
           )}
-        </Col>
+        </Col> */}
+
+        {/* Contact & Additional Information */}
+{!isProject && (
+  <Col lg={4}>
+    {/* Contact Information */}
+    <Card className="bg-dark text-white mb-4">
+      <Card.Header className="border-secondary">
+        <h6 className="mb-0">
+          <i className="bi bi-telephone me-2"></i>
+          Contact Information
+        </h6>
+      </Card.Header>
+      <Card.Body>
+        <div className="d-flex flex-column gap-3">
+          {student.email && (
+            <div className="d-flex align-items-center gap-3">
+              <div className="bg-primary rounded-circle d-flex align-items-center justify-content-center" style={{width: '35px', height: '35px'}}>
+                <i className="bi bi-envelope"></i>
+              </div>
+              <div>
+                <small className="text-light opacity-75">Email</small>
+                <div className="fw-bold">{student.email}</div>
+              </div>
+            </div>
+          )}
+          {student.phone && (
+            <div className="d-flex align-items-center gap-3">
+              <div className="bg-success rounded-circle d-flex align-items-center justify-content-center" style={{width: '35px', height: '35px'}}>
+                <i className="bi bi-phone"></i>
+              </div>
+              <div>
+                <small className="text-light opacity-75">Phone</small>
+                <div className="fw-bold">{student.phone}</div>
+              </div>
+            </div>
+          )}
+          {student.address && (
+            <div className="d-flex align-items-start gap-3">
+              <div className="bg-warning rounded-circle d-flex align-items-center justify-content-center" style={{width: '35px', height: '35px'}}>
+                <i className="bi bi-geo-alt"></i>
+              </div>
+              <div>
+                <small className="text-light opacity-75">Address</small>
+                <div className="fw-bold small">{student.address}</div>
+                <div className="text-light opacity-75">
+                  {student.city}, {student.district}, {student.state} - {student.pincode}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </Card.Body>
+    </Card>
+
+    {/* Personal Information */}
+    <Card className="bg-dark text-white">
+      <Card.Header className="border-secondary">
+        <h6 className="mb-0">
+          <i className="bi bi-person-badge me-2"></i>
+          Personal Information
+        </h6>
+      </Card.Header>
+      <Card.Body>
+        <Row className="g-2">
+          <Col sm={6}>
+            <small className="text-light opacity-75">Date of Birth</small>
+            <div className="fw-bold">{new Date(student.dob).toLocaleDateString()}</div>
+          </Col>
+          <Col sm={6}>
+            <small className="text-light opacity-75">Age</small>
+            <div className="fw-bold">{student.age} years</div>
+          </Col>
+        </Row>
+      </Card.Body>
+    </Card>
+  </Col>
+)}
+
       </Row>
 
       {/* Group Members Section (Project Only) */}

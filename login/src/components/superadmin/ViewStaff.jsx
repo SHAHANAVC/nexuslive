@@ -16,6 +16,7 @@ import {
 } from 'react-bootstrap';
 // import { FaEye, FaEdit, FaTrash, FaSearch, FaFilter, FaSync, FaUserCog } from 'react-icons/fa';
 import api from '../../api';
+import StaffRegistrationForm from '../admin/StaffRegistraionForm';
 
 const ViewStaff = () => {
   const [staffList, setStaffList] = useState([]);
@@ -32,6 +33,8 @@ const ViewStaff = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [newRole, setNewRole] = useState('');
+    const [showRegistrationModal, setShowRegistrationModal] = useState(false);
+  
 
   const departments = ['Technical', 'Marketing'];
   const statusOptions = ['active', 'probation', 'resigned'];
@@ -222,12 +225,26 @@ const ViewStaff = () => {
               <h2 className="text-white mb-1">Staff Management</h2>
               <p className="text-light mb-0">View and manage all staff members</p>
             </div>
-            <Badge bg="primary" className="fs-6 px-3 py-2">
+            <div className='d-flex gap-2'>
+            <Badge bg="primary" className="fs-6 px-3 py-2 d-flex gap-2">
               Total Staff: {filteredStaff.length}
             </Badge>
+            <Button 
+                            variant="success" 
+                            className="d-flex align-items-center gap-2 justify-content-center"
+                            onClick={() => setShowRegistrationModal(true)}
+                            size="sm"
+                          >
+                            <i className="bi bi-person-plus"></i>
+                            <span className="d-none d-sm-inline">Add New Staff</span>
+                            <span className="d-sm-none">Add Staff</span>
+                          </Button>
+            </div>
           </div>
         </Col>
       </Row>
+
+      
 
       {/* Alerts */}
       {error && (
@@ -312,15 +329,15 @@ const ViewStaff = () => {
           </Form.Select>
         </Col>
 
-        <Col lg={3} md={6} className="mb-2">
+        {/* <Col lg={3} md={6} className="mb-2">
           <Button 
             variant="outline-light" 
             onClick={fetchStaff}
             className="w-100 d-flex align-items-center justify-content-center gap-2"
           >
-            {/* <FaSync /> Refresh */}
+           
           </Button>
-        </Col>
+        </Col> */}
       </Row>
 
       {/* Staff Table */}
@@ -442,6 +459,8 @@ const ViewStaff = () => {
         </Col>
       </Row>
 
+
+
       {/* View Staff Modal */}
       <Modal 
         show={showViewModal} 
@@ -453,7 +472,7 @@ const ViewStaff = () => {
         <Modal.Header closeButton className="bg-dark border-secondary">
           <Modal.Title>Staff Details</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="bg-dark">
+        <Modal.Body className="bg-dark text-white">
           {selectedStaff && (
             <Row className="g-3">
               <Col md={6}>
@@ -470,7 +489,18 @@ const ViewStaff = () => {
               </Col>
               <Col md={6}>
                 <strong>Emergency Contact:</strong>
-                <p>{selectedStaff.emergencyContact}</p>
+                <div className='d-flex gap-1'>
+                <p>Name :</p>
+                <p>{selectedStaff.emergencyContact.name}</p>
+                </div>
+                <div className='d-flex gap-1'>
+                <p>Relation :</p>
+                <p>{selectedStaff.emergencyContact.relation}</p>
+                </div>
+                <div className='d-flex gap-1'>
+                <p>Phone :</p>
+                <p>{selectedStaff.emergencyContact.phone}</p>
+                </div>
               </Col>
               <Col md={6}>
                 <strong>Department:</strong>
@@ -586,6 +616,8 @@ const ViewStaff = () => {
         </Modal.Footer>
       </Modal>
 
+      
+
       {/* Delete Confirmation Modal */}
       <Modal 
         show={showDeleteModal} 
@@ -619,7 +651,18 @@ const ViewStaff = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+      <StaffRegistrationForm
+  show={showRegistrationModal}
+  onHide={() => setShowRegistrationModal(false)}
+  onStaffAdded={fetchStaff}   // refreshes the staff list after adding
+  departments={departments}
+  qualifications={['High School', 'Diploma', 'Bachelor\'s Degree', 
+    'Master\'s Degree', 'PhD', 'Professional Certification']}          // optional, can edit later
+/>
+
+      
     </Container>
+    
   );
 };
 
