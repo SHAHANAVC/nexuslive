@@ -71,7 +71,14 @@ const staffSchema = new Schema({
   documents: {
     type: [String], // URLs or file paths
   },
-
+ editHistory: [
+    {
+      editedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Staff' },
+      changes: Object,  // { fieldName: { from: oldValue, to: newValue } }
+      action: { type: String, default: 'update' },
+      timestamp: { type: Date, default: Date.now }
+    }
+  ],
 
   createdAt: {
     type: Date,
@@ -89,9 +96,9 @@ const staffSchema = new Schema({
 
 // // Method to compare password
 // staffSchema.methods.comparePassword = async function (candidatePassword) {
-//   return await bcrypt.compare(candidatePassword, this.password);
-// };
-
-const Staff = model("Staff", staffSchema);
-
-export default Staff;
+  //   return await bcrypt.compare(candidatePassword, this.password);
+  // };
+  const Staff = model("Staff", staffSchema);
+  
+  
+  export default Staff;

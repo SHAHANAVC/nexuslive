@@ -1,16 +1,14 @@
 import express from "express";
-import {
-  createRegistration,
-  // getProjects,
-  // getInternships,
-  // getRegistrationById,
-} from "../controllers/registrationController.js";
+
+import { createStudent, deleteStudent, getstudentNamesById, getStudents, updateStudent } from "../controllers/studentController.js";
+
 
 const router = express.Router();
 
 // Create new registration
-router.post("/", createRegistration);
-
+router.post("/", createStudent);
+router.put('/:id',updateStudent)
+router.delete('/:id',deleteStudent)
 // View all projects
 // router.get("/projects", getProjects);
 
@@ -19,5 +17,6 @@ router.post("/", createRegistration);
 
 // Get single registration
 // router.get("/:id", getRegistrationById);
-
+router.get("/", getStudents);
+router.get('/names',getstudentNamesById)
 export default router;
