@@ -6,14 +6,19 @@ const groupMemberSchema = new Schema({
   name: { type: String },
   email: { type: String },
   phone: { type: String },
-  regNumber: { type: String } 
+  regNumber: { type: String } ,
+    paymentInfo: {
+    totalPaid: { type: Number, default: 0 },
+    balance: { type: Number, default: 0 }, // will calculate from Registration fees
+    lastPaymentDate: { type: Date }
+  }
 });
 
 const registrationSchema = new Schema({
   formId: {
     type: String,
-    unique: true, // ✅ Each form gets unique ID like TRY0001, NEX0002
-    required: true
+    // unique: true, // ✅ Each form gets unique ID like TRY0001, NEX0002
+    // required: true
   },
   institution: {
     type: String,
@@ -24,6 +29,16 @@ const registrationSchema = new Schema({
     type: String,
     enum: ["internship", "project"],
     required: true
+  },
+  modeOfCourse: {
+  type: String,
+  // enum: ["online", "offline", "fastrack", "detailed"], // ✅ both internship & project modes
+  // required: true
+},
+ paymentStatus: {
+    type: String,
+    enum: ["pending", "completed"],
+    default: "pending"
   },
 
   // -------- PROJECT FIELDS --------
@@ -57,8 +72,30 @@ const registrationSchema = new Schema({
     type: Number,
     required: true
   },
+    // Add this ↓↓↓
+  paymentInfo: {
+    totalPaid: { type: Number, default: 0 },
+    balance: { type: Number, default: function () { return this.fees; } },
+    lastPaymentDate: { type: Date },
+  },
   description: { type: String },
   additionalModules: { type: String },
+  technology: {
+    type: String,
+    required: function () {
+      return this.category === "project";
+    },
+    trim: true
+  },
+    // Project Status (only for projects)
+  projectStatus: {
+    type: String,
+    // enum: ["not started", "in progress", "completed"], 
+    required: function () {
+      return this.category === "project";
+    },
+    default: "not started"
+  },
   groupMembers: [groupMemberSchema],
 
   // -------- INTERNSHIP FIELDS --------
@@ -140,13 +177,16 @@ const registrationSchema = new Schema({
       return this.category === "internship";
     }
   },
-  modeOfCourse: {
-    type: String,
-    // enum: ["online", "offline"],
-    required: function () {
-      return this.category === "internship";
+  
+  history: [
+    {
+      updatedBy: { type: String }, // e.g., super admin email
+      updatedAt: { type: Date, default: Date.now },
+      changes: { type: Object },  // store the updated fields
     }
-  },
+  ],
+
+
 
   createdAt: { type: Date, default: Date.now }
 });
