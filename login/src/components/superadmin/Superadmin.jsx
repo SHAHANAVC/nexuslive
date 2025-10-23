@@ -16,6 +16,9 @@ import {
 import Dashboard from "./Dashboard";
 import AdminStaff from "../admin/AdminStaff";
 import ViewStaff from "./ViewStaff";
+import Adminstudent from "../admin/Adminstudent";
+import PaymentView from "../admin/ViewPayment";
+import SuperadminStudent from "./SuperadminStudent";
 // import StaffRegistration from "../StaffRegistration";
 
 function Superadmin() {
@@ -28,10 +31,10 @@ function Superadmin() {
         return <Dashboard />;
       // Add more cases as you create components
       case "staffs": return <ViewStaff/>
+      case "students": return <SuperadminStudent/>
+      case "payment": return <PaymentView/>
         case "settings":
-      case "projects":
       case "tasks":
-      case "calendar":
       case "reports":
         // Return a placeholder or actual component
         return (
@@ -65,9 +68,9 @@ function Superadmin() {
   const menuItems = [
     { key: "dashboard", label: "Dashboard", icon: "speedometer2" },
     { key: "staffs", label: "Staffs", icon: "people" },
-    { key: "projects", label: "Projects", icon: "folder" },
+    { key: "students", label: "Students", icon: "people" },
     { key: "tasks", label: "Tasks", icon: "check-square" },
-    { key: "calendar", label: "Calendar", icon: "calendar" },
+    { key: "payment", label: "Payment", icon: "credit-card" },
     { key: "reports", label: "Reports", icon: "graph-up" },
     { key: "settings", label: "Settings", icon: "gear" },
   ];

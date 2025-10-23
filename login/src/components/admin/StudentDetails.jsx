@@ -199,7 +199,7 @@ const   StudentDetails = () => {
         <Col sm={6}>
           <div className="border-bottom border-secondary pb-2">
             <small className="text-light opacity-75">Form ID</small>
-            <div className="fw-bold text-info">{student.formId}</div>
+            <div className="fw-bold text-info">{student.formId || student.groupNo}</div>
           </div>
         </Col>
         <Col sm={6}>
@@ -218,6 +218,18 @@ const   StudentDetails = () => {
           <div className="border-bottom border-secondary pb-2">
             <small className="text-light opacity-75">College</small>
             <div className="fw-bold">{student.college}</div>
+          </div>
+        </Col>
+        <Col sm={6}>
+          <div className="border-bottom border-secondary pb-2">
+            <small className="text-light opacity-75">Work Status</small>
+            <div className="fw-bold">{student.projectStatus}</div>
+          </div>
+        </Col>
+        <Col sm={6}>
+          <div className="border-bottom border-secondary pb-2">
+            <small className="text-light opacity-75">Payment Status</small>
+            <div className="fw-bold">{student.paymentStatus}</div>
           </div>
         </Col>
         <Col sm={6}>

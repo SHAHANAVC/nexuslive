@@ -805,36 +805,51 @@ const StaffRegistrationForm = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+ 
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (validateForm()) {
-      const newStaff = {
-        ...staffData,
-        documents: documentFiles
-      };
+  if (validateForm()) {
+    const newStaff = {
+      ...staffData,
+      documents: documentFiles
+    };
 
-      if (onStaffAdded) onStaffAdded(newStaff);
+    try {
+      const reqres = await api.post('/staff/register', newStaff);
+      console.log('Staff registered:', reqres.data);
 
-      setShowSuccessAlert(true);
+      // ✅ Show success alert first
+      alert(reqres.data.message || 'Successfully registered staff');
 
-      try {
-        const reqres = await api.post('/staff/register', newStaff);
-        console.log(reqres);
-        window.location.reload();
-      } catch (e) {
-        console.error('Error adding staff:', e);
-        alert('Failed to add staff. Please try again.');
-      }
-
-      setTimeout(() => {
-        setShowSuccessAlert(false);
-        if (onHide) onHide();
-      }, 2000);
-
+      // ✅ Then close modal immediately
+      if (onStaffAdded) onStaffAdded();
+      handleClose();
       resetForm();
+
+    } catch (e) {
+      console.error('Error adding staff:', e);
+
+      // ✅ Extract detailed backend message
+      const msg =
+        e.response?.data?.message ||
+        e.response?.data?.error ||
+        e.message ||
+        'Failed to add staff. Please try again.';
+
+      alert(msg);
+
+      // ✅ Inline field validation for backend errors
+      const lowerMsg = msg.toLowerCase();
+
+      setErrors((prev) => ({
+        ...prev,
+        email: lowerMsg.includes('email') ? msg : prev.email,
+        phone: lowerMsg.includes('phone') || lowerMsg.includes('mobile') ? msg : prev.phone,
+      }));
     }
-  };
+  }
+};
 
   const resetForm = () => {
     setStaffData({
@@ -872,7 +887,7 @@ const StaffRegistrationForm = ({
 
   return (
     <Modal show={show} onHide={handleClose} size="xl" centered scrollable responsive>
-      <Modal.Header closeButton className="bg-dark text-white border-secondary">
+      <Modal.Header closeButton className="bg-dark text-white border-secondary text-white">
         <Modal.Title className="fs-6 fs-md-5">
           <i className="bi bi-person-plus me-2"></i>
           Register New Staff

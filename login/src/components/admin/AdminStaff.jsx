@@ -36,70 +36,7 @@ const AdminStaff = () => {
     'Master\'s Degree', 'PhD', 'Professional Certification'
   ];
 
-  // Initialize mock data
-  // useEffect(() => {
-  //   const mockStaff = [
-  //     {
-  //       id: 1,
-  //       name: 'John Smith',
-  //       email: 'john.smith@company.com',
-  //       phone: '1234567890',
-  //       department: 'Administration',
-  //       designation: 'Manager',
-  //       qualification: "Master's Degree",
-  //       dateOfJoining: '2020-01-15',
-  //       status: 'active',
-  //       address: '123 Main St, City, State',
-  //       emergencyContact: '0987654321',
-  //       documents: []
-  //     },
-  //     {
-  //       id: 2,
-  //       name: 'Sarah Johnson',
-  //       email: 'sarah.j@company.com',
-  //       phone: '2345678901',
-  //       department: 'Academic',
-  //       designation: 'Senior Staff',
-  //       qualification: "PhD",
-  //       dateOfJoining: '2019-03-20',
-  //       status: 'active',
-  //       address: '456 Oak Ave, City, State',
-  //       emergencyContact: '9876543210',
-  //       documents: []
-  //     },
-  //     {
-  //       id: 3,
-  //       name: 'Mike Chen',
-  //       email: 'mike.chen@company.com',
-  //       phone: '3456789012',
-  //       department: 'IT Support',
-  //       designation: 'Technical Lead',
-  //       qualification: "Bachelor's Degree",
-  //       dateOfJoining: '2021-06-10',
-  //       status: 'probation',
-  //       address: '789 Pine Rd, City, State',
-  //       emergencyContact: '8765432109',
-  //       documents: []
-  //     },
-  //     {
-  //       id: 4,
-  //       name: 'Emily Davis',
-  //       email: 'emily.davis@company.com',
-  //       phone: '4567890123',
-  //       department: 'Human Resources',
-  //       designation: 'Coordinator',
-  //       qualification: "Master's Degree",
-  //       dateOfJoining: '2018-11-05',
-  //       status: 'active',
-  //       address: '321 Elm St, City, State',
-  //       emergencyContact: '7654321098',
-  //       documents: []
-  //     }
-  //   ];
-    
-  //   setStaffMembers(mockStaff);
-  //   setFilteredStaff(mockStaff);
-  // }, []);
+  
 
   // Filter staff based on search and filters
   useEffect(() => {
@@ -152,17 +89,28 @@ const AdminStaff = () => {
     );
   };
 
-  const handleStaffAdded = (newStaff) => {
-    // Add ID and other necessary fields
-    const staffWithId = {
-      ...newStaff,
-      id: staffMembers.length > 0 ? Math.max(...staffMembers.map(s => s.id)) + 1 : 1
-    };
+  // const handleStaffAdded = (newStaff) => {
+  //   // Add ID and other necessary fields
+  //   const staffWithId = {
+  //     ...newStaff,
+  //     id: staffMembers.length > 0 ? Math.max(...staffMembers.map(s => s.id)) + 1 : 1
+  //   };
 
-    setStaffMembers(prev => [...prev, staffWithId]);
-    setShowSuccessAlert(true);
-    setTimeout(() => setShowSuccessAlert(false), 3000);
-  };
+  //   setStaffMembers(prev => [...prev, staffWithId]);
+  //   setShowSuccessAlert(true);
+  //   setTimeout(() => setShowSuccessAlert(false), 3000);
+  // };
+  const handleStaffAdded = async () => {
+  setShowRegistrationModal(false); // close the modal
+  setShowSuccessAlert(true);       // show success alert
+
+  // Re-fetch the staff list from backend
+  await fetchStaffs();
+
+  // Hide alert after 3 seconds
+  setTimeout(() => setShowSuccessAlert(false), 3000);
+};
+
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);

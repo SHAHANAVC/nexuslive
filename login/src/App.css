@@ -116,6 +116,7 @@ a{
   background:  #414345 !important;
   border: 1px solid rgba(0, 0, 0, 0.1) !important;
   color: white !important;
+  opacity: 1000;
 }
 
 
@@ -484,4 +485,11 @@ a{
 .custom-input::placeholder {
   color: white !important;
   opacity: 1; 
+}
+
+body, html {
+  background-color: #121212; /* full dark background */
+  color: white;
+  margin: 0;
+  padding: 0;
 }

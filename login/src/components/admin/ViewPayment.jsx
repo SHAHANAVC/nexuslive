@@ -94,8 +94,12 @@ const fetchPayments = async () => {
     
     if (filters.startDate) params.append('startDate', filters.startDate);
     if (filters.endDate) params.append('endDate', filters.endDate);
+    // console.log(params);
+    
     
     const response = await api.get(`/payment?${params.toString()}`);
+    console.log(response);
+    
     
     if (response.data.success) {
       let filteredData = response.data.data;
@@ -237,7 +241,7 @@ const fetchPayments = async () => {
 </Modal> */}
 <Modal
   show={showPayment}
-  onHide={() => setShowPayment(false)}
+  onHide={() => {setShowPayment(false); fetchPayments(); }}
   centered
   backdrop="static"
   keyboard={false}
@@ -371,7 +375,7 @@ const fetchPayments = async () => {
                   <option value="all">All Methods</option>
                   <option value="cash">Cash</option>
                   <option value="gpay">GPay</option>
-                  <option value="bank">Bank</option>
+                  {/* <option value="bank">Bank</option> */}
                 </Form.Select>
               </Form.Group>
             </Col>

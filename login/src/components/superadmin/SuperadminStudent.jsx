@@ -2,11 +2,13 @@
 // import axios from 'axios';
 // import { Container, Row, Col, Card, Button, Table, Form, InputGroup, Modal, Dropdown } from 'react-bootstrap';
 // import { useNavigate } from 'react-router-dom';
-// import ProjectForm from './ProjectForm';
-// import InternshipForm from './InternshipForm';
+// // import ProjectForm from './ProjectForm';
+// // import InternshipForm from './InternshipForm';
 // import api from '../../api';
+// import ProjectForm from '../admin/ProjectForm';
+// import InternshipForm from '../admin/InternshipForm';
 
-// const Adminstudent = () => {
+// const SuperadminStudent = () => {
 //   const [students, setStudents] = useState([]);
 //   // const [student,setStudent] = useState()
 //   const [showForm, setShowForm] = useState(false);
@@ -92,9 +94,27 @@
 //     setShowForm(true);
 //   };
 
-//   const handleDelete = (id) => {
+// //   const handleDelete = (id) => {
+// //     setStudents(students.filter(s => s.id !== id));
+// //   };
+// const handleDelete = async (id) => {
+//     console.log(id,'iiiiiiiiiiiiii');
+    
+//   if (!window.confirm("Are you sure you want to delete this student?")) return;
+
+//   try {
+//     // Make API call to delete from backend
+//     const response = await api.delete(`/registrations/${id}`);
+//     alert(response.data.message || "Student deleted successfully!");
+
+//     // Remove from local state
 //     setStudents(students.filter(s => s.id !== id));
-//   };
+//   } catch (error) {
+//     console.error("Error deleting student:", error);
+//     alert(error.response?.data?.message || "Failed to delete student");
+//   }
+// };
+
 
 //   const handleAddNewStudent = () => {
 //     setEditingStudent(null);
@@ -209,15 +229,29 @@
 //             <i className="bi bi-pencil"></i>
 //             Edit
 //           </Button>
-//           <Button
+//           {/* <Button
 //             variant="outline-danger"
 //             size="sm"
-//             onClick={() => handleDelete(student.id)}
+//             onClick={() => {handleDelete(student.id); console.log(s.id);}
+//             }
 //             className="flex-fill d-flex align-items-center justify-content-center gap-1"
 //           >
 //             <i className="bi bi-trash"></i>
 //             Delete
-//           </Button>
+//           </Button> */}
+//           <Button
+//   variant="outline-danger"
+//   size="sm"
+//   onClick={(e) => {
+//     e.stopPropagation(); // prevent row click
+//     handleDelete(student._id);
+    
+//   }}
+//   title="Delete"
+// >
+//   <i className="bi bi-trash"></i>
+// </Button>
+
 //         </div>
 //       </Card.Body>
 //     </Card>
@@ -303,6 +337,18 @@
 //           >
 //             <i className="bi bi-trash"></i>
 //           </Button> */}
+//           <Button
+//   variant="outline-danger"
+//   size="sm"
+//   onClick={(e) => {
+//     e.stopPropagation(); // prevent row click
+//     handleDelete(student._id);
+//   }}
+//   title="Delete"
+// >
+//   <i className="bi bi-trash"></i>
+// </Button>
+
 //         </div>
 //       </td>
 //     </tr>
@@ -601,25 +647,26 @@
 //         </Modal.Header>
 //         <Modal.Body className="bg-dark text-white p-0">
 //           {selectedType === 'project' ? (
+            
 //             <ProjectForm
-//               student={editingStudent}
+//             student={editingStudent}
 //               onSave={handleAddStudent}
 //               onCancel={() => {
 //                 setShowForm(false);
 //                 setEditingStudent(null);
 //                 setSelectedType('');
-//               }}
-//             />
+//               }}/>
+
 //           ) : (
+            
 //             <InternshipForm
-//               student={editingStudent}
+//             student={editingStudent}
 //               onSave={handleAddStudent}
 //               onCancel={() => {
 //                 setShowForm(false);
 //                 setEditingStudent(null);
 //                 setSelectedType('');
-//               }}
-//             />
+//               }}/>
 //           )}
 //         </Modal.Body>
 //       </Modal>
@@ -627,17 +674,19 @@
 //   );
 // };
 
-// export default Adminstudent;
+// export default SuperadminStudent;
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Container, Row, Col, Card, Button, Table, Form, InputGroup, Modal, Dropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import ProjectForm from './ProjectForm';
-import InternshipForm from './InternshipForm';
+// import ProjectForm from './ProjectForm';
+// import InternshipForm from './InternshipForm';
 import api from '../../api';
+import ProjectForm from '../admin/ProjectForm';
+import InternshipForm from '../admin/InternshipForm';
 
-const Adminstudent = () => {
+const SuperadminStudent = () => {
   const [students, setStudents] = useState([]);
   // const [student,setStudent] = useState()
   const [showForm, setShowForm] = useState(false);
@@ -651,6 +700,7 @@ const Adminstudent = () => {
   
   const navigate = useNavigate();
   // const API_URL = 'http://localhost:8000/api/students/';
+
 
   
 useEffect(() => {
@@ -676,8 +726,7 @@ useEffect(() => {
       student.institution?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.projectName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.technology?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      student.modeOfCourse?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      student.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.course?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.formId?.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesEnrollment = 
@@ -707,7 +756,8 @@ useEffect(() => {
     setShowTypeModal(false);
     setEditingStudent(null);
     setSelectedType('');
-    await fetchStudents();
+      // fetch from backend once after save
+  await fetchStudents();
   };
 
   const handleEdit = (student) => {
@@ -716,9 +766,28 @@ useEffect(() => {
     setShowForm(true);
   };
 
-  const handleDelete = (id) => {
+//   const handleDelete = (id) => {
+//     setStudents(students.filter(s => s.id !== id));
+//   };
+const handleDelete = async (id) => {
+    console.log(id,'iiiiiiiiiiiiii');
+    
+  if (!window.confirm("Are you sure you want to delete this student?")) return;
+
+  try {
+    // Make API call to delete from backend
+    const response = await api.delete(`/registrations/${id}`);
+    alert(response.data.message || "Student deleted successfully!");
+
+    // Remove from local state
     setStudents(students.filter(s => s.id !== id));
-  };
+    await fetchStudents();
+  } catch (error) {
+    console.error("Error deleting student:", error);
+    alert(error.response?.data?.message || "Failed to delete student");
+  }
+};
+
 
   const handleAddNewStudent = () => {
     setEditingStudent(null);
@@ -833,15 +902,29 @@ useEffect(() => {
             <i className="bi bi-pencil"></i>
             Edit
           </Button>
-          <Button
+          {/* <Button
             variant="outline-danger"
             size="sm"
-            onClick={() => handleDelete(student.id)}
+            onClick={() => {handleDelete(student.id); console.log(s.id);}
+            }
             className="flex-fill d-flex align-items-center justify-content-center gap-1"
           >
             <i className="bi bi-trash"></i>
             Delete
-          </Button>
+          </Button> */}
+          <Button
+  variant="outline-danger"
+  size="sm"
+  onClick={(e) => {
+    e.stopPropagation(); // prevent row click
+    handleDelete(student._id);
+    
+  }}
+  title="Delete"
+>
+  <i className="bi bi-trash"></i>
+</Button>
+
         </div>
       </Card.Body>
     </Card>
@@ -927,6 +1010,18 @@ useEffect(() => {
           >
             <i className="bi bi-trash"></i>
           </Button> */}
+          <Button
+  variant="outline-danger"
+  size="sm"
+  onClick={(e) => {
+    e.stopPropagation(); // prevent row click
+    handleDelete(student._id);
+  }}
+  title="Delete"
+>
+  <i className="bi bi-trash"></i>
+</Button>
+
         </div>
       </td>
     </tr>
@@ -942,8 +1037,15 @@ useEffect(() => {
               <h2 className="text-white mb-1 fs-4 fs-md-3">Student Management</h2>
               <p className="text-light mb-0 d-none d-md-block">Manage student records and enrollment</p>
             </div>
-            
-            {/* <Button 
+            <div className='d-flex gap-1'>
+              <Button
+                variant="outline-light" 
+  className="bg-transparent border-white text-white"
+  onClick={fetchStudents}>
+    <i className="bi bi-arrow-clockwise pe-2"></i>
+              Refresh
+              </Button>
+            <Button 
               variant="primary" 
               onClick={handleAddNewStudent}
               className="d-md-flex align-items-center gap-2  d-none w-md-auto justify-content-center"
@@ -952,26 +1054,8 @@ useEffect(() => {
               <i className="bi bi-plus-circle"></i>
               <span className="d-none d-lg-inline">Add New Student</span>
               <span className="d-lg-none">Add Student</span>
-            </Button> */}
-            <div className='d-flex gap-1'>
-                          <Button
-                            variant="outline-light" 
-              className="bg-transparent border-white text-white"
-              onClick={fetchStudents}>
-                <i className="bi bi-arrow-clockwise pe-2"></i>
-                          Refresh
-                          </Button>
-                        <Button 
-                          variant="primary" 
-                          onClick={handleAddNewStudent}
-                          className="d-md-flex align-items-center gap-2  d-none w-md-auto justify-content-center"
-                          size="sm"
-                        >
-                          <i className="bi bi-plus-circle"></i>
-                          <span className="d-none d-lg-inline">Add New Student</span>
-                          <span className="d-lg-none">Add Student</span>
-                        </Button>
-                        </div>
+            </Button>
+            </div>
           </div>
         </Col>
       </Row>
@@ -1245,25 +1329,26 @@ useEffect(() => {
         </Modal.Header>
         <Modal.Body className="bg-dark text-white p-0">
           {selectedType === 'project' ? (
+            
             <ProjectForm
-              student={editingStudent}
+            student={editingStudent}
               onSave={handleAddStudent}
               onCancel={() => {
                 setShowForm(false);
                 setEditingStudent(null);
                 setSelectedType('');
-              }}
-            />
+              }}/>
+
           ) : (
+            
             <InternshipForm
-              student={editingStudent}
+            student={editingStudent}
               onSave={handleAddStudent}
               onCancel={() => {
                 setShowForm(false);
                 setEditingStudent(null);
                 setSelectedType('');
-              }}
-            />
+              }}/>
           )}
         </Modal.Body>
       </Modal>
@@ -1271,4 +1356,4 @@ useEffect(() => {
   );
 };
 
-export default Adminstudent;
+export default SuperadminStudent;
