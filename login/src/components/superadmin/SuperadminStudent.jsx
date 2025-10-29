@@ -676,47 +676,721 @@
 
 // export default SuperadminStudent;
 
+// import React, { useState, useEffect } from 'react';
+// import axios from 'axios';
+// import { Container, Row, Col, Card, Button, Table, Form, InputGroup, Modal, Dropdown } from 'react-bootstrap';
+// import { useNavigate } from 'react-router-dom';
+// // import ProjectForm from './ProjectForm';
+// // import InternshipForm from './InternshipForm';
+// import api from '../../api';
+// import ProjectForm from '../admin/ProjectForm';
+// import InternshipForm from '../admin/InternshipForm';
+
+// const SuperadminStudent = () => {
+//   const [students, setStudents] = useState([]);
+//   // const [student,setStudent] = useState()
+//   const [showForm, setShowForm] = useState(false);
+//   const [showTypeModal, setShowTypeModal] = useState(false);
+//   const [selectedType, setSelectedType] = useState('');
+//   const [searchTerm, setSearchTerm] = useState('');
+//   const [editingStudent, setEditingStudent] = useState(null);
+//   const [enrollmentFilter, setEnrollmentFilter] = useState('all');
+//   console.log(enrollmentFilter);
+  
+  
+//   const navigate = useNavigate();
+//   // const API_URL = 'http://localhost:8000/api/students/';
+
+
+  
+// useEffect(() => {
+//   fetchStudents();
+// }, []);
+
+//   const fetchStudents = async () => {
+//   try {
+//     const response = await api.get('/registrations')
+//     setStudents(response.data.data);
+//     console.log('Students fetched:', response.data);
+//   } catch (error) {
+//     console.error('Error fetching students:', error);
+//   }
+// };
+
+
+//   // Filter students based on search and enrollment type
+//   const filteredStudents = students.filter(student => {
+//     const matchesSearch = 
+//       student.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+//       student.college?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+//       student.institution?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+//       student.projectName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+//       student.technology?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+//       student.course?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+//       student.formId?.toLowerCase().includes(searchTerm.toLowerCase());
+
+//     const matchesEnrollment = 
+//       enrollmentFilter === 'all' || 
+//       student.category === enrollmentFilter;
+
+//     return matchesSearch && matchesEnrollment;
+//   });
+
+//   const handleAddStudent = async (studentData) => {
+//     if (editingStudent) {
+//       // Update existing student
+//       setStudents(students.map(s => 
+//         s.id === editingStudent.id ? { ...studentData, id: editingStudent.id } : s
+//       ));
+//     } else {
+//       // Add new student
+//       const newStudent = {
+//         ...studentData,
+//         id: Date.now().toString(),
+//         category: selectedType,
+//         name: selectedType === 'project' ? studentData.groupMembers?.[0]?.name : studentData.name
+//       };
+//       setStudents([...students, newStudent]);
+//     }
+//     setShowForm(false);
+//     setShowTypeModal(false);
+//     setEditingStudent(null);
+//     setSelectedType('');
+//       // fetch from backend once after save
+//   await fetchStudents();
+//   };
+
+//   const handleEdit = (student) => {
+//     setEditingStudent(student);
+//     setSelectedType(student.category);
+//     setShowForm(true);
+//   };
+
+// //   const handleDelete = (id) => {
+// //     setStudents(students.filter(s => s.id !== id));
+// //   };
+// const handleDelete = async (id) => {
+//     console.log(id,'iiiiiiiiiiiiii');
+    
+//   if (!window.confirm("Are you sure you want to delete this student?")) return;
+
+//   try {
+//     // Make API call to delete from backend
+//     const response = await api.delete(`/registrations/${id}`);
+//     alert(response.data.message || "Student deleted successfully!");
+
+//     // Remove from local state
+//     setStudents(students.filter(s => s.id !== id));
+//     await fetchStudents();
+//   } catch (error) {
+//     console.error("Error deleting student:", error);
+//     alert(error.response?.data?.message || "Failed to delete student");
+//   }
+// };
+
+
+//   const handleAddNewStudent = () => {
+//     setEditingStudent(null);
+//     setSelectedType('');
+//     setShowTypeModal(true);
+//   };
+
+//   const handleTypeSelect = (type) => {
+//     setSelectedType(type);
+//     setShowTypeModal(false);
+//     setShowForm(true);
+//   };
+
+//   const handleViewDetails = (student) => {
+//     navigate('/student-details', { state: { student } });
+//   };
+
+//   // Mobile Card View
+//   const MobileStudentCard = ({ student }) => (
+//     <Card 
+//       className="bg-dark text-white mb-3 border-secondary cursor-pointer"
+//       style={{ cursor: 'pointer' }}
+//       onClick={() => handleViewDetails(student)}
+//     >
+//       <Card.Body>
+//         {/* Header with basic info */}
+//         <div className="d-flex justify-content-between align-items-start mb-2">
+//           <div className="d-flex align-items-center">
+//             <div 
+//               className="rounded-circle d-flex align-items-center justify-content-center me-2"
+//               style={{ 
+//                 width: '40px', 
+//                 height: '40px', 
+//                 background: 'rgba(255,255,255,0.1)'
+//               }}
+//             >
+//               <i className="bi bi-person-fill"></i>
+//             </div>
+//             <div>
+//               <h6 className="mb-0 fw-bold">{student.name || student.projectName}</h6>
+//               <small className="text-light opacity-75">{student.formId}</small>
+//             </div>
+//           </div>
+//           <span 
+//             className={`badge ${
+//               student.category === 'project' 
+//                 ? 'bg-warning text-dark' 
+//                 : 'bg-primary'
+//             }`}
+//           >
+//             {student.category === 'project' ? 'Project' : 'Internship'}
+//           </span>
+//         </div>
+
+//         {/* Course/Project Info */}
+//         <div className="mb-2">
+//           <small className="text-light opacity-75">
+//             {student.category === 'project' ? 'Mode: ' : 'Mode: '}
+//           </small>
+//           <div className="fw-bold">
+//             {student.category === 'project' ? student.modeOfCourse : student.modeOfCourse}
+//           </div>
+//         </div>
+
+//         {/* Institute & Email */}
+//         <div className="row g-2 mb-2">
+//           <Col xs={6}>
+//             <small className="text-light opacity-75">Institute</small>
+//             <div className="small">{student.institution}</div>
+//           </Col>
+//           <Col xs={6}>
+//             <small className="text-light opacity-75">college</small>
+//             <div className="small text-truncate">{student.college}</div>
+//           </Col>
+//         </div>
+
+//         {/* Additional Info */}
+//         <div className="row g-2 mb-3">
+//           <Col xs={6}>
+//             <small className="text-light opacity-75">Date</small>
+//             <div className="small">{student.dateOfJoining.slice(0, 10)}</div>
+//           </Col>
+//           {student && (
+//             <Col xs={6}>
+//               <small className="text-light opacity-75">Technology</small>
+//               <div>
+//                 <span className="badge bg-info text-dark small">
+//                   {student.technology || student.course}
+//                 </span>
+//               </div>
+//             </Col>
+//           )}
+//         </div>
+
+//         {/* Actions */}
+//         <div className="d-flex gap-2" onClick={(e) => e.stopPropagation()}>
+//           <Button
+//             variant="outline-info"
+//             size="sm"
+//             onClick={() => handleViewDetails(student)}
+//             className="flex-fill d-flex align-items-center justify-content-center gap-1"
+//           >
+//             <i className="bi bi-eye"></i>
+//             View
+//           </Button>
+//           <Button
+//             variant="outline-light"
+//             size="sm"
+//             onClick={() => handleEdit(student)}
+//             className="flex-fill d-flex align-items-center justify-content-center gap-1"
+//           >
+//             <i className="bi bi-pencil"></i>
+//             Edit
+//           </Button>
+//           {/* <Button
+//             variant="outline-danger"
+//             size="sm"
+//             onClick={() => {handleDelete(student.id); console.log(s.id);}
+//             }
+//             className="flex-fill d-flex align-items-center justify-content-center gap-1"
+//           >
+//             <i className="bi bi-trash"></i>
+//             Delete
+//           </Button> */}
+//           <Button
+//   variant="outline-danger"
+//   size="sm"
+//   onClick={(e) => {
+//     e.stopPropagation(); // prevent row click
+//     handleDelete(student._id);
+    
+//   }}
+//   title="Delete"
+// >
+//   <i className="bi bi-trash"></i>
+// </Button>
+
+//         </div>
+//       </Card.Body>
+//     </Card>
+//   );
+
+//   // Desktop Table Row with click handler=========================================================================================================
+//   const DesktopTableRow = ({ student }) => (
+//     <tr 
+//       key={student.id} 
+//       className="align-middle cursor-pointer"
+//       style={{ cursor: 'pointer' }}
+//       onClick={() => handleViewDetails(student)}
+//     >
+//       <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>
+//         <code>{student.groupNo || student.formId}</code>
+//       </td>
+//       <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>
+//         <div className="d-flex align-items-center">
+//           <div 
+//             className="rounded-circle d-flex align-items-center justify-content-center me-3"
+//             style={{ 
+//               width: '40px', 
+//               height: '40px', 
+//               background: 'rgba(255,255,255,0.1)' 
+//             }}
+//           >
+//             <i className="bi bi-person-fill"></i>
+//           </div>
+//           <div>
+//             <div className="fw-bold">{student.name || student.projectName}</div>
+//             <small className="text-light opacity-75">{student.regNumber}</small>
+//           </div>
+//         </div>
+//       </td>
+//       <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>{student.institution}</td>
+//       <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>{student.college}</td>
+//       <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>{student.dateOfJoining.slice(0, 10)}</td>
+//       <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>{student.modeOfCourse}</td>
+//       <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>
+//         {student.category === 'project' ? student.technology : student.course}
+//       </td>
+//       {/* <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>
+//         {student.technology && (
+//           <span className="badge bg-info text-dark">
+//             {student.technology}
+//           </span>
+//         )}
+//       </td> */}
+//       <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>
+//         <span 
+//           className={`badge ${
+//             student.category === 'project' 
+//               ? 'bg-warning text-dark' 
+//               : 'bg-primary'
+//           }`}
+//         >
+//           {student.category}
+//         </span>
+//       </td>
+//       <td style={{borderColor: 'rgba(255,255,255,0.1)'}} onClick={(e) => e.stopPropagation()}>
+//         <div className="d-flex gap-2">
+//           <Button
+//             variant="outline-info"
+//             size="sm"
+//             onClick={() => handleViewDetails(student)}
+//             title="View Details"
+//           >
+//             <i className="bi bi-eye"></i>
+//           </Button>
+//           <Button
+//             variant="outline-light"
+//             size="sm"
+//             onClick={() => handleEdit(student)}
+//             title="Edit"
+//           >
+//             <i className="bi bi-pencil"></i>
+//           </Button>
+//           {/* <Button
+//             variant="outline-danger"
+//             size="sm"
+//             onClick={() => handleDelete(student.id)}
+//             title="Delete"
+//           >
+//             <i className="bi bi-trash"></i>
+//           </Button> */}
+//           <Button
+//   variant="outline-danger"
+//   size="sm"
+//   onClick={(e) => {
+//     e.stopPropagation(); // prevent row click
+//     handleDelete(student._id);
+//   }}
+//   title="Delete"
+// >
+//   <i className="bi bi-trash"></i>
+// </Button>
+
+//         </div>
+//       </td>
+//     </tr>
+//   );
+
+//   return (
+//     <Container fluid className="px-2 px-md-3">
+//       {/* Header Section */}
+//       <Row className="mb-3 mb-md-4">
+//         <Col>
+//           <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">
+//             <div className="text-center text-md-start">
+//               <h2 className="text-white mb-1 fs-4 fs-md-3">Student Management</h2>
+//               <p className="text-light mb-0 d-none d-md-block">Manage student records and enrollment</p>
+//             </div>
+//             <div className='d-flex gap-1'>
+//               <Button
+//                 variant="outline-light" 
+//   className="bg-transparent border-white text-white"
+//   onClick={fetchStudents}>
+//     <i className="bi bi-arrow-clockwise pe-2"></i>
+//               Refresh
+//               </Button>
+//             <Button 
+//               variant="primary" 
+//               onClick={handleAddNewStudent}
+//               className="d-md-flex align-items-center gap-2  d-none w-md-auto justify-content-center"
+//               size="sm"
+//             >
+//               <i className="bi bi-plus-circle"></i>
+//               <span className="d-none d-lg-inline">Add New Student</span>
+//               <span className="d-lg-none">Add Student</span>
+//             </Button>
+//             </div>
+//           </div>
+//         </Col>
+//       </Row>
+
+//       {/* Stats Cards */}
+//       <Row className="mb-3 mb-md-4 g-2 g-md-3">
+//         <Col xs={6} md={3}>
+//           <Card className="bg-dark text-white h-100" style={{border: 'none'}}>
+//             <Card.Body className="p-2 p-md-3">
+//               <div className="d-flex justify-content-between align-items-center">
+//                 <div>
+//                   <h4 className="mb-0 fs-6 fs-md-4">{students.length}</h4>
+//                   <small className="text-light">Total Students</small>
+//                 </div>
+//                 <i className="bi bi-people text-primary fs-5 fs-md-2"></i>
+//               </div>
+//             </Card.Body>
+//           </Card>
+//         </Col>
+//         <Col xs={6} md={3}>
+//           <Card className="bg-dark text-white h-100" style={{border: 'none'}}>
+//             <Card.Body className="p-2 p-md-3">
+//               <div className="d-flex justify-content-between align-items-center">
+//                 <div>
+//                   <h4 className="mb-0 fs-6 fs-md-4">
+//                     {students.filter(s => s.category === 'project').length}
+//                   </h4>
+//                   <small className="text-light">Project Students</small>
+//                 </div>
+//                 <i className="bi bi-folder text-warning fs-5 fs-md-2"></i>
+//               </div>
+//             </Card.Body>
+//           </Card>
+//         </Col>
+//         <Col xs={6} md={3}>
+//           <Card className="bg-dark text-white h-100" style={{border: 'none'}}>
+//             <Card.Body className="p-2 p-md-3">
+//               <div className="d-flex justify-content-between align-items-center">
+//                 <div>
+//                   <h4 className="mb-0 fs-6 fs-md-4">
+//                     {students.filter(s => s.category === 'internship').length}
+//                   </h4>
+//                   <small className="text-light">Internship Students</small>
+//                 </div>
+//                 <i className="bi bi-briefcase text-info fs-5 fs-md-2"></i>
+//               </div>
+//             </Card.Body>
+//           </Card>
+//         </Col>
+//         <Col xs={6} md={3}>
+//           <Card className="bg-dark text-white h-100" style={{border: 'none'}}>
+//             <Card.Body className="p-2 p-md-3">
+//               <div className="d-flex justify-content-between align-items-center">
+//                 <div>
+//                   <h4 className="mb-0 fs-6 fs-md-4">
+//                     {new Set(students.map(s => s.college)).size}
+//                   </h4>
+//                   <small className="text-light">Colleges</small>
+//                 </div>
+//                 <i className="bi bi-building text-success fs-5 fs-md-2"></i>
+//               </div>
+//             </Card.Body>
+//           </Card>
+//         </Col>
+//       </Row>
+
+//       {/* Search and Controls */}
+//       <Row className="mb-3 g-2">
+//         <Col xs={12} md={6}>
+//           <InputGroup size="sm">
+//             <Form.Control
+//               type="text"
+//               placeholder="Search by form ID, name, college, or email..."
+//               value={searchTerm}
+//               onChange={(e) => setSearchTerm(e.target.value)}
+//               className="bg-dark text-white"
+//               style={{border: '1px solid rgba(255,255,255,0.2)'}}
+//             />
+//             <Button 
+//               variant="outline-secondary" 
+//               style={{border: '1px solid rgba(255,255,255,0.2)'}}
+//               size="sm"
+//             >
+//               <i className="bi bi-search"></i>
+//             </Button>
+//           </InputGroup>
+//         </Col>
+//         <Col xs={12} md={6}>
+//           <div className="d-flex flex-column flex-md-row gap-2 justify-content-md-end">
+//             <Form.Select 
+//               className="bg-dark text-white" 
+//               style={{ border: '1px solid rgba(255,255,255,0.2)' }}
+//               value={enrollmentFilter}
+//               onChange={(e) => setEnrollmentFilter(e.target.value)}
+//               size="sm"
+//             >
+//               <option value="all">All Enrollment Types</option>
+//               <option value="project">Project</option>
+//               <option value="internship">Internship</option>
+//             </Form.Select>
+//           </div>
+//         </Col>
+//       </Row>
+
+//       {/* Students List - Mobile Card View */}
+//       <div className="d-md-none">
+//         <Row>
+//           <Col>
+//             {filteredStudents.length === 0 ? (
+//               <div className="text-center py-5">
+//                 <i className="bi bi-people fs-1 text-light opacity-50"></i>
+//                 <h5 className="text-light mt-3 fs-6">No students found</h5>
+//                 <p className="text-light opacity-75 px-3">
+//                   {students.length === 0 
+//                     ? "Get started by adding your first student" 
+//                     : "No students match your search criteria"}
+//                 </p>
+//                 {students.length === 0 && (
+//                   <Button 
+//                     variant="primary" 
+//                     onClick={handleAddNewStudent}
+//                     size="sm"
+//                   >
+//                     Add First Student
+//                   </Button>
+//                 )}
+//               </div>
+//             ) : (
+//               <div>
+//                 {filteredStudents.map((student) => (
+//                   <MobileStudentCard key={student.id} student={student} />
+//                 ))}
+//               </div>
+//             )}
+//           </Col>
+//         </Row>
+//       </div>
+
+//       {/* Students Table - Desktop View */}
+//       <div className="d-none d-md-block">
+//         <Row>
+//           <Col>
+//             <Card className="bg-dark text-white" style={{border: 'none'}}>
+//               <Card.Body className="p-0">
+//                 {filteredStudents.length === 0 ? (
+//                   <div className="text-center py-5">
+//                     <i className="bi bi-people display-1 text-light opacity-50"></i>
+//                     <h5 className="text-light mt-3">No students found</h5>
+//                     <p className="text-light opacity-75">
+//                       {students.length === 0 
+//                         ? "Get started by adding your first student" 
+//                         : "No students match your search criteria"}
+//                     </p>
+//                     {students.length === 0 && (
+//                       <Button variant="primary" onClick={handleAddNewStudent}>
+//                         Add First Student
+//                       </Button>
+//                     )}
+//                   </div>
+//                 ) : (
+//                   <div className="table-responsive">
+//                     <Table hover variant="dark" className="mb-0" style={{border: 'none'}}>
+//                       <thead>
+//                         <tr>
+//                           <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Form ID</th>
+//                           <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Name</th>
+//                           <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Institute</th>
+//                           <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>College</th>
+//                           <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Date of Joining</th>
+//                           <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Mode</th>
+//                           <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Technology</th>
+//                           {/* <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Technology</th> */}
+//                           <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Type</th>
+//                           <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Actions</th>
+//                         </tr>
+//                       </thead>
+//                       <tbody>
+//                         {filteredStudents.map((student) => (
+//                           <DesktopTableRow key={student.id} student={student} />
+//                         ))}
+//                       </tbody>
+//                     </Table>
+//                   </div>
+//                 )}
+//               </Card.Body>
+//             </Card>
+//           </Col>
+//         </Row>
+//       </div>
+
+//       {/* Floating Action Button for Mobile */}
+//       <div className="d-md-none position-fixed bottom-0 end-0 m-3" style={{zIndex: 1050}}>
+//         <Button
+//           variant="primary"
+//           onClick={handleAddNewStudent}
+//           className="rounded-circle d-flex align-items-center justify-content-center"
+//           style={{ 
+//             width: '60px', 
+//             height: '60px',
+//             boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
+//           }}
+//         >
+//           <i className="bi bi-plus fs-4"></i>
+//         </Button>
+//       </div>
+
+//       {/* Type Selection Modal */}
+//       <Modal 
+//         show={showTypeModal} 
+//         onHide={() => setShowTypeModal(false)}
+//         centered
+//         contentClassName="bg-dark"
+//         size="sm"
+//       >
+//         <Modal.Header closeButton className="bg-dark text-white border-secondary">
+//           <Modal.Title className="fs-6">
+//             <i className="bi bi-person-plus me-2"></i>
+//             Select Enrollment Type
+//           </Modal.Title>
+//         </Modal.Header>
+//         <Modal.Body className="bg-dark text-white text-center py-4">
+//           <div className="row g-3">
+//             <div className="col-12">
+//               <div 
+//                 className="card bg-dark border-warning h-100 cursor-pointer"
+//                 style={{ cursor: 'pointer' }}
+//                 onClick={() => handleTypeSelect('project')}
+//               >
+//                 <div className="card-body text-center py-4">
+//                   <i className="bi bi-folder text-warning fs-1"></i>
+//                   <h5 className="mt-3 mb-2">Project</h5>
+//                   <p className="text-light opacity-75 mb-0 small">Register for project work</p>
+//                 </div>
+//               </div>
+//             </div>
+//             <div className="col-12">
+//               <div 
+//                 className="card bg-dark border-info h-100 cursor-pointer"
+//                 style={{ cursor: 'pointer' }}
+//                 onClick={() => handleTypeSelect('internship')}
+//               >
+//                 <div className="card-body text-center py-4">
+//                   <i className="bi bi-briefcase text-info fs-1"></i>
+//                   <h5 className="mt-3 mb-2">Internship</h5>
+//                   <p className="text-light opacity-75 mb-0 small">Register for internship</p>
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         </Modal.Body>
+//       </Modal>
+
+//       {/* Student Form Modal */}
+//       <Modal 
+//         show={showForm} 
+//         onHide={() => {
+//           setShowForm(false);
+//           setEditingStudent(null);
+//           setSelectedType('');
+//         }}
+//         size="lg"
+//         centered
+//         contentClassName="bg-dark"
+//         scrollable
+//       >
+//         <Modal.Header closeButton className="bg-dark text-white border-secondary">
+//           <Modal.Title className="fs-6">
+//             <i className="bi bi-person-plus me-2"></i>
+//             {editingStudent ? 'Edit Student' : `Add New ${selectedType === 'project' ? 'Project' : 'Internship'} Student`}
+//           </Modal.Title>
+//         </Modal.Header>
+//         <Modal.Body className="bg-dark text-white p-0">
+//           {selectedType === 'project' ? (
+            
+//             <ProjectForm
+//             student={editingStudent}
+//               onSave={handleAddStudent}
+//               onCancel={() => {
+//                 setShowForm(false);
+//                 setEditingStudent(null);
+//                 setSelectedType('');
+//               }}/>
+
+//           ) : (
+            
+//             <InternshipForm
+//             student={editingStudent}
+//               onSave={handleAddStudent}
+//               onCancel={() => {
+//                 setShowForm(false);
+//                 setEditingStudent(null);
+//                 setSelectedType('');
+//               }}/>
+//           )}
+//         </Modal.Body>
+//       </Modal>
+//     </Container>
+//   );
+// };
+
+// export default SuperadminStudent;
+
+// ⚪⚪⚪⚪⚪⚪⚪⚪⚪Responsive new 
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Container, Row, Col, Card, Button, Table, Form, InputGroup, Modal, Dropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-// import ProjectForm from './ProjectForm';
-// import InternshipForm from './InternshipForm';
 import api from '../../api';
 import ProjectForm from '../admin/ProjectForm';
 import InternshipForm from '../admin/InternshipForm';
 
 const SuperadminStudent = () => {
   const [students, setStudents] = useState([]);
-  // const [student,setStudent] = useState()
   const [showForm, setShowForm] = useState(false);
   const [showTypeModal, setShowTypeModal] = useState(false);
   const [selectedType, setSelectedType] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [editingStudent, setEditingStudent] = useState(null);
   const [enrollmentFilter, setEnrollmentFilter] = useState('all');
-  console.log(enrollmentFilter);
-  
   
   const navigate = useNavigate();
-  // const API_URL = 'http://localhost:8000/api/students/';
 
-
-  
-useEffect(() => {
-  fetchStudents();
-}, []);
+  useEffect(() => {
+    fetchStudents();
+  }, []);
 
   const fetchStudents = async () => {
-  try {
-    const response = await api.get('/registrations')
-    setStudents(response.data.data);
-    console.log('Students fetched:', response.data);
-  } catch (error) {
-    console.error('Error fetching students:', error);
-  }
-};
-
+    try {
+      const response = await api.get('/registrations')
+      setStudents(response.data.data);
+    } catch (error) {
+      console.error('Error fetching students:', error);
+    }
+  };
 
   // Filter students based on search and enrollment type
   const filteredStudents = students.filter(student => {
@@ -756,8 +1430,7 @@ useEffect(() => {
     setShowTypeModal(false);
     setEditingStudent(null);
     setSelectedType('');
-      // fetch from backend once after save
-  await fetchStudents();
+    await fetchStudents();
   };
 
   const handleEdit = (student) => {
@@ -766,28 +1439,19 @@ useEffect(() => {
     setShowForm(true);
   };
 
-//   const handleDelete = (id) => {
-//     setStudents(students.filter(s => s.id !== id));
-//   };
-const handleDelete = async (id) => {
-    console.log(id,'iiiiiiiiiiiiii');
-    
-  if (!window.confirm("Are you sure you want to delete this student?")) return;
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this student?")) return;
 
-  try {
-    // Make API call to delete from backend
-    const response = await api.delete(`/registrations/${id}`);
-    alert(response.data.message || "Student deleted successfully!");
-
-    // Remove from local state
-    setStudents(students.filter(s => s.id !== id));
-    await fetchStudents();
-  } catch (error) {
-    console.error("Error deleting student:", error);
-    alert(error.response?.data?.message || "Failed to delete student");
-  }
-};
-
+    try {
+      const response = await api.delete(`/registrations/${id}`);
+      alert(response.data.message || "Student deleted successfully!");
+      setStudents(students.filter(s => s.id !== id));
+      await fetchStudents();
+    } catch (error) {
+      console.error("Error deleting student:", error);
+      alert(error.response?.data?.message || "Failed to delete student");
+    }
+  };
 
   const handleAddNewStudent = () => {
     setEditingStudent(null);
@@ -805,38 +1469,40 @@ const handleDelete = async (id) => {
     navigate('/student-details', { state: { student } });
   };
 
-  // Mobile Card View
+  // Mobile Card View - Enhanced for very small screens
   const MobileStudentCard = ({ student }) => (
     <Card 
-      className="bg-dark text-white mb-3 border-secondary cursor-pointer"
+      className="bg-dark text-white mb-2 border-secondary"
       style={{ cursor: 'pointer' }}
       onClick={() => handleViewDetails(student)}
     >
-      <Card.Body>
+      <Card.Body className="p-2 p-sm-3">
         {/* Header with basic info */}
         <div className="d-flex justify-content-between align-items-start mb-2">
-          <div className="d-flex align-items-center">
+          <div className="d-flex align-items-center flex-grow-1 me-2">
             <div 
-              className="rounded-circle d-flex align-items-center justify-content-center me-2"
+              className="rounded-circle d-flex align-items-center justify-content-center me-2 flex-shrink-0"
               style={{ 
-                width: '40px', 
-                height: '40px', 
-                background: 'rgba(255,255,255,0.1)'
+                width: '36px', 
+                height: '36px', 
+                background: 'rgba(255,255,255,0.1)',
+                fontSize: '0.875rem'
               }}
             >
               <i className="bi bi-person-fill"></i>
             </div>
-            <div>
-              <h6 className="mb-0 fw-bold">{student.name || student.projectName}</h6>
-              <small className="text-light opacity-75">{student.formId}</small>
+            <div className="min-w-0 flex-grow-1">
+              <h6 className="mb-0 fw-bold text-truncate small">
+                {student.name || student.projectName}
+              </h6>
+              <small className="text-light opacity-75 text-truncate d-block" style={{fontSize: '0.7rem'}}>
+                {student.formId}
+              </small>
             </div>
           </div>
           <span 
-            className={`badge ${
-              student.category === 'project' 
-                ? 'bg-warning text-dark' 
-                : 'bg-primary'
-            }`}
+            className={`badge ${student.category === 'project' ? 'bg-warning text-dark' : 'bg-primary'} flex-shrink-0`}
+            style={{fontSize: '0.65rem'}}
           >
             {student.category === 'project' ? 'Project' : 'Internship'}
           </span>
@@ -844,153 +1510,145 @@ const handleDelete = async (id) => {
 
         {/* Course/Project Info */}
         <div className="mb-2">
-          <small className="text-light opacity-75">
-            {student.category === 'project' ? 'Project: ' : 'Course: '}
+          <small className="text-light opacity-75 d-block" style={{fontSize: '0.7rem'}}>
+            {student.category === 'project' ? 'Project' : 'Course'}:
           </small>
-          <div className="fw-bold">
-            {student.category === 'project' ? student.technologyName : student.course}
+          <div className="fw-bold text-truncate" style={{fontSize: '0.8rem'}}>
+            {student.category === 'project' ? student.technology : student.course}
           </div>
         </div>
 
-        {/* Institute & Email */}
-        <div className="row g-2 mb-2">
+        {/* Institute & College */}
+        <div className="row g-1 mb-2">
           <Col xs={6}>
-            <small className="text-light opacity-75">Institute</small>
-            <div className="small">{student.institution}</div>
+            <small className="text-light opacity-75 d-block" style={{fontSize: '0.7rem'}}>Institute</small>
+            <div className="text-truncate" style={{fontSize: '0.75rem'}}>{student.institution}</div>
           </Col>
           <Col xs={6}>
-            <small className="text-light opacity-75">college</small>
-            <div className="small text-truncate">{student.college}</div>
+            <small className="text-light opacity-75 d-block" style={{fontSize: '0.7rem'}}>College</small>
+            <div className="text-truncate" style={{fontSize: '0.75rem'}}>{student.college}</div>
           </Col>
         </div>
 
-        {/* Additional Info */}
-        <div className="row g-2 mb-3">
+        {/* Date & Mode */}
+        <div className="row g-1 mb-2">
           <Col xs={6}>
-            <small className="text-light opacity-75">Date</small>
-            <div className="small">{student.dateOfJoining}</div>
+            <small className="text-light opacity-75 d-block" style={{fontSize: '0.7rem'}}>Date</small>
+            <div style={{fontSize: '0.75rem'}}>
+              {student.dateOfJoining ? student.dateOfJoining.slice(0, 10) : 'N/A'}
+            </div>
           </Col>
-          {student.technology && (
-            <Col xs={6}>
-              <small className="text-light opacity-75">Technology</small>
-              <div>
-                <span className="badge bg-info text-dark small">
-                  {student.technology || student.course}
-                </span>
-              </div>
-            </Col>
-          )}
+          <Col xs={6}>
+            <small className="text-light opacity-75 d-block" style={{fontSize: '0.7rem'}}>Mode</small>
+            <div style={{fontSize: '0.75rem'}}>{student.modeOfCourse}</div>
+          </Col>
         </div>
 
         {/* Actions */}
-        <div className="d-flex gap-2" onClick={(e) => e.stopPropagation()}>
+        <div className="d-flex gap-1" onClick={(e) => e.stopPropagation()}>
           <Button
             variant="outline-info"
             size="sm"
             onClick={() => handleViewDetails(student)}
             className="flex-fill d-flex align-items-center justify-content-center gap-1"
+            style={{fontSize: '0.75rem', padding: '0.25rem 0.5rem'}}
           >
             <i className="bi bi-eye"></i>
-            View
+            <span className="d-none d-xs-inline">View</span>
           </Button>
           <Button
             variant="outline-light"
             size="sm"
             onClick={() => handleEdit(student)}
             className="flex-fill d-flex align-items-center justify-content-center gap-1"
+            style={{fontSize: '0.75rem', padding: '0.25rem 0.5rem'}}
           >
             <i className="bi bi-pencil"></i>
-            Edit
+            <span className="d-none d-xs-inline">Edit</span>
           </Button>
-          {/* <Button
+          <Button
             variant="outline-danger"
             size="sm"
-            onClick={() => {handleDelete(student.id); console.log(s.id);}
-            }
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete(student._id);
+            }}
             className="flex-fill d-flex align-items-center justify-content-center gap-1"
+            style={{fontSize: '0.75rem', padding: '0.25rem 0.5rem'}}
+            title="Delete"
           >
             <i className="bi bi-trash"></i>
-            Delete
-          </Button> */}
-          <Button
-  variant="outline-danger"
-  size="sm"
-  onClick={(e) => {
-    e.stopPropagation(); // prevent row click
-    handleDelete(student._id);
-    
-  }}
-  title="Delete"
->
-  <i className="bi bi-trash"></i>
-</Button>
-
+            <span className="d-none d-xs-inline">Delete</span>
+          </Button>
         </div>
       </Card.Body>
     </Card>
   );
 
-  // Desktop Table Row with click handler=========================================================================================================
+  // Desktop Table Row with responsive improvements
   const DesktopTableRow = ({ student }) => (
     <tr 
-      key={student.id} 
       className="align-middle cursor-pointer"
       style={{ cursor: 'pointer' }}
       onClick={() => handleViewDetails(student)}
     >
-      <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>
-        <code>{student.groupNo || student.formId}</code>
+      <td style={{borderColor: 'rgba(255,255,255,0.1)'}} className="d-none d-lg-table-cell">
+        <code className="small">{student.groupNo || student.formId}</code>
       </td>
       <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>
         <div className="d-flex align-items-center">
           <div 
-            className="rounded-circle d-flex align-items-center justify-content-center me-3"
+            className="rounded-circle d-flex align-items-center justify-content-center me-2 me-md-3 flex-shrink-0"
             style={{ 
-              width: '40px', 
-              height: '40px', 
-              background: 'rgba(255,255,255,0.1)' 
+              width: '36px', 
+              height: '36px', 
+              background: 'rgba(255,255,255,0.1)',
+              fontSize: '0.875rem'
             }}
           >
             <i className="bi bi-person-fill"></i>
           </div>
-          <div>
-            <div className="fw-bold">{student.name || student.projectName}</div>
-            <small className="text-light opacity-75">{student.regNumber}</small>
+          <div className="min-w-0">
+            <div className="fw-bold text-truncate small">{student.name || student.projectName}</div>
+            <small className="text-light opacity-75 d-none d-md-block" style={{fontSize: '0.7rem'}}>
+              {student.regNumber}
+            </small>
           </div>
         </div>
       </td>
-      <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>{student.institution}</td>
-      <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>{student.college}</td>
-      <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>{student.dateOfJoining}</td>
-      <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>{student.modeOfCourse}</td>
-      <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>
-        {student.category === 'project' ? student.technology : student.course}
+      <td style={{borderColor: 'rgba(255,255,255,0.1)'}} className="d-none d-xl-table-cell">
+        <div className="text-truncate" style={{maxWidth: '150px'}}>{student.institution}</div>
       </td>
-      {/* <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>
-        {student.technology && (
-          <span className="badge bg-info text-dark">
-            {student.technology}
-          </span>
-        )}
-      </td> */}
+      <td style={{borderColor: 'rgba(255,255,255,0.1)'}} className="d-none d-lg-table-cell">
+        <div className="text-truncate" style={{maxWidth: '120px'}}>{student.college}</div>
+      </td>
+      <td style={{borderColor: 'rgba(255,255,255,0.1)'}} className="d-none d-md-table-cell">
+        <span className="small">{student.dateOfJoining ? student.dateOfJoining.slice(0, 10) : 'N/A'}</span>
+      </td>
+      <td style={{borderColor: 'rgba(255,255,255,0.1)'}} className="d-none d-xl-table-cell">
+        <span className="small">{student.modeOfCourse}</span>
+      </td>
       <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>
+        <div className="text-truncate small" style={{maxWidth: '120px'}}>
+          {student.category === 'project' ? student.technology : student.course}
+        </div>
+      </td>
+      <td style={{borderColor: 'rgba(255,255,255,0.1)'}} className="d-none d-sm-table-cell">
         <span 
-          className={`badge ${
-            student.category === 'project' 
-              ? 'bg-warning text-dark' 
-              : 'bg-primary'
-          }`}
+          className={`badge ${student.category === 'project' ? 'bg-warning text-dark' : 'bg-primary'} small`}
         >
           {student.category}
         </span>
       </td>
       <td style={{borderColor: 'rgba(255,255,255,0.1)'}} onClick={(e) => e.stopPropagation()}>
-        <div className="d-flex gap-2">
+        <div className="d-flex gap-1 flex-nowrap">
           <Button
             variant="outline-info"
             size="sm"
             onClick={() => handleViewDetails(student)}
             title="View Details"
+            className="d-flex align-items-center justify-content-center"
+            style={{width: '32px', height: '32px'}}
           >
             <i className="bi bi-eye"></i>
           </Button>
@@ -999,123 +1657,120 @@ const handleDelete = async (id) => {
             size="sm"
             onClick={() => handleEdit(student)}
             title="Edit"
+            className="d-flex align-items-center justify-content-center"
+            style={{width: '32px', height: '32px'}}
           >
             <i className="bi bi-pencil"></i>
           </Button>
-          {/* <Button
+          <Button
             variant="outline-danger"
             size="sm"
-            onClick={() => handleDelete(student.id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete(student._id);
+            }}
             title="Delete"
+            className="d-flex align-items-center justify-content-center"
+            style={{width: '32px', height: '32px'}}
           >
             <i className="bi bi-trash"></i>
-          </Button> */}
-          <Button
-  variant="outline-danger"
-  size="sm"
-  onClick={(e) => {
-    e.stopPropagation(); // prevent row click
-    handleDelete(student._id);
-  }}
-  title="Delete"
->
-  <i className="bi bi-trash"></i>
-</Button>
-
+          </Button>
         </div>
       </td>
     </tr>
   );
 
   return (
-    <Container fluid className="px-2 px-md-3">
+    <Container fluid className="px-1 px-sm-2 px-md-3 py-2">
       {/* Header Section */}
-      <Row className="mb-3 mb-md-4">
+      <Row className="mb-2 mb-md-3">
         <Col>
-          <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">
-            <div className="text-center text-md-start">
-              <h2 className="text-white mb-1 fs-4 fs-md-3">Student Management</h2>
-              <p className="text-light mb-0 d-none d-md-block">Manage student records and enrollment</p>
+          <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2">
+            <div className="text-center text-sm-start">
+              <h2 className="text-white mb-1 fs-5 fs-sm-4 fs-md-3">Student Management</h2>
+              <p className="text-light mb-0 d-none d-md-block small">Manage student records and enrollment</p>
             </div>
-            <div className='d-flex gap-1'>
+            <div className='d-flex gap-1 w-100 w-sm-auto justify-content-sm-end'>
               <Button
                 variant="outline-light" 
-  className="bg-transparent border-white text-white"
-  onClick={fetchStudents}>
-    <i className="bi bi-arrow-clockwise pe-2"></i>
-              Refresh
+                className="bg-transparent border-white text-white d-flex align-items-center"
+                onClick={fetchStudents}
+                size="sm"
+              >
+                <i className="bi bi-arrow-clockwise pe-1 pe-sm-2"></i>
+                <span className="d-none d-sm-inline">Refresh</span>
               </Button>
-            <Button 
-              variant="primary" 
-              onClick={handleAddNewStudent}
-              className="d-md-flex align-items-center gap-2  d-none w-md-auto justify-content-center"
-              size="sm"
-            >
-              <i className="bi bi-plus-circle"></i>
-              <span className="d-none d-lg-inline">Add New Student</span>
-              <span className="d-lg-none">Add Student</span>
-            </Button>
+              <Button 
+                variant="primary" 
+                onClick={handleAddNewStudent}
+                className="d-none d-sm-flex align-items-center gap-1 gap-md-2"
+                size="sm"
+              >
+                <i className="bi bi-plus-circle"></i>
+                <span className="d-none d-lg-inline">Add New Student</span>
+                <span className="d-lg-none">Add Student</span>
+              </Button>
             </div>
           </div>
         </Col>
       </Row>
 
       {/* Stats Cards */}
-      <Row className="mb-3 mb-md-4 g-2 g-md-3">
-        <Col xs={6} md={3}>
+      <Row className="mb-2 mb-md-3 g-1 g-sm-2 g-md-3">
+        <Col xs={6} sm={3}>
           <Card className="bg-dark text-white h-100" style={{border: 'none'}}>
-            <Card.Body className="p-2 p-md-3">
+            <Card.Body className="p-2 p-sm-3">
               <div className="d-flex justify-content-between align-items-center">
                 <div>
-                  <h4 className="mb-0 fs-6 fs-md-4">{students.length}</h4>
-                  <small className="text-light">Total Students</small>
+                  <h4 className="mb-0 fs-6 fs-sm-5 fs-md-4">{students.length}</h4>
+                  <small className="text-light" style={{fontSize: '0.75rem'}}>Total Students</small>
                 </div>
-                <i className="bi bi-people text-primary fs-5 fs-md-2"></i>
+                <i className="bi bi-people text-primary fs-6 fs-sm-5 fs-md-4"></i>
               </div>
             </Card.Body>
           </Card>
         </Col>
-        <Col xs={6} md={3}>
+        <Col xs={6} sm={3}>
           <Card className="bg-dark text-white h-100" style={{border: 'none'}}>
-            <Card.Body className="p-2 p-md-3">
+            <Card.Body className="p-2 p-sm-3">
               <div className="d-flex justify-content-between align-items-center">
                 <div>
-                  <h4 className="mb-0 fs-6 fs-md-4">
+                  <h4 className="mb-0 fs-6 fs-sm-5 fs-md-4">
                     {students.filter(s => s.category === 'project').length}
                   </h4>
-                  <small className="text-light">Project Students</small>
+                  <small className="text-light" style={{fontSize: '0.75rem'}}>Project Students</small>
                 </div>
-                <i className="bi bi-folder text-warning fs-5 fs-md-2"></i>
+                <i className="bi bi-folder text-warning fs-6 fs-sm-5 fs-md-4"></i>
               </div>
             </Card.Body>
           </Card>
         </Col>
-        <Col xs={6} md={3}>
+        <Col xs={6} sm={3}>
           <Card className="bg-dark text-white h-100" style={{border: 'none'}}>
-            <Card.Body className="p-2 p-md-3">
+            <Card.Body className="p-2 p-sm-3">
               <div className="d-flex justify-content-between align-items-center">
                 <div>
-                  <h4 className="mb-0 fs-6 fs-md-4">
+                  <h4 className="mb-0 fs-6 fs-sm-5 fs-md-4">
                     {students.filter(s => s.category === 'internship').length}
                   </h4>
-                  <small className="text-light">Internship Students</small>
+                  <small className="text-light" style={{fontSize: '0.75rem'}}>Internship Students</small>
                 </div>
-                <i className="bi bi-briefcase text-info fs-5 fs-md-2"></i>
+                <i className="bi bi-briefcase text-info fs-6 fs-sm-5 fs-md-4"></i>
               </div>
             </Card.Body>
           </Card>
         </Col>
-        <Col xs={6} md={3}>
+        <Col xs={6} sm={3}>
           <Card className="bg-dark text-white h-100" style={{border: 'none'}}>
-            <Card.Body className="p-2 p-md-3">
+            <Card.Body className="p-2 p-sm-3">
               <div className="d-flex justify-content-between align-items-center">
                 <div>
-                  <h4 className="mb-0 fs-6 fs-md-4">
+                  <h4 className="mb-0 fs-6 fs-sm-5 fs-md-4">
                     {new Set(students.map(s => s.college)).size}
                   </h4>
-                  <small className="text-light">Colleges</small>
+                  <small className="text-light" style={{fontSize: '0.75rem'}}>Colleges</small>
                 </div>
-                <i className="bi bi-building text-success fs-5 fs-md-2"></i>
+                <i className="bi bi-building text-success fs-6 fs-sm-5 fs-md-4"></i>
               </div>
             </Card.Body>
           </Card>
@@ -1123,16 +1778,16 @@ const handleDelete = async (id) => {
       </Row>
 
       {/* Search and Controls */}
-      <Row className="mb-3 g-2">
-        <Col xs={12} md={6}>
+      <Row className="mb-2 mb-md-3 g-2">
+        <Col xs={12} md={6} lg={5}>
           <InputGroup size="sm">
             <Form.Control
               type="text"
-              placeholder="Search by form ID, name, college, or email..."
+              placeholder="Search students..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="bg-dark text-white"
-              style={{border: '1px solid rgba(255,255,255,0.2)'}}
+              style={{border: '1px solid rgba(255,255,255,0.2)', fontSize: '0.875rem'}}
             />
             <Button 
               variant="outline-secondary" 
@@ -1143,16 +1798,19 @@ const handleDelete = async (id) => {
             </Button>
           </InputGroup>
         </Col>
-        <Col xs={12} md={6}>
+        <Col xs={12} md={6} lg={3} xl={2}>
           <div className="d-flex flex-column flex-md-row gap-2 justify-content-md-end">
             <Form.Select 
               className="bg-dark text-white" 
-              style={{ border: '1px solid rgba(255,255,255,0.2)' }}
+              style={{ 
+                border: '1px solid rgba(255,255,255,0.2)',
+                fontSize: '0.875rem'
+              }}
               value={enrollmentFilter}
               onChange={(e) => setEnrollmentFilter(e.target.value)}
               size="sm"
             >
-              <option value="all">All Enrollment Types</option>
+              <option value="all">All Types</option>
               <option value="project">Project</option>
               <option value="internship">Internship</option>
             </Form.Select>
@@ -1161,14 +1819,14 @@ const handleDelete = async (id) => {
       </Row>
 
       {/* Students List - Mobile Card View */}
-      <div className="d-md-none">
+      <div className="d-block d-md-none">
         <Row>
           <Col>
             {filteredStudents.length === 0 ? (
-              <div className="text-center py-5">
+              <div className="text-center py-4">
                 <i className="bi bi-people fs-1 text-light opacity-50"></i>
-                <h5 className="text-light mt-3 fs-6">No students found</h5>
-                <p className="text-light opacity-75 px-3">
+                <h5 className="text-light mt-2 fs-6">No students found</h5>
+                <p className="text-light opacity-75 px-3 small">
                   {students.length === 0 
                     ? "Get started by adding your first student" 
                     : "No students match your search criteria"}
@@ -1201,35 +1859,34 @@ const handleDelete = async (id) => {
             <Card className="bg-dark text-white" style={{border: 'none'}}>
               <Card.Body className="p-0">
                 {filteredStudents.length === 0 ? (
-                  <div className="text-center py-5">
+                  <div className="text-center py-4">
                     <i className="bi bi-people display-1 text-light opacity-50"></i>
-                    <h5 className="text-light mt-3">No students found</h5>
-                    <p className="text-light opacity-75">
+                    <h5 className="text-light mt-2">No students found</h5>
+                    <p className="text-light opacity-75 small">
                       {students.length === 0 
                         ? "Get started by adding your first student" 
                         : "No students match your search criteria"}
                     </p>
                     {students.length === 0 && (
-                      <Button variant="primary" onClick={handleAddNewStudent}>
+                      <Button variant="primary" onClick={handleAddNewStudent} size="sm">
                         Add First Student
                       </Button>
                     )}
                   </div>
                 ) : (
-                  <div className="table-responsive">
-                    <Table hover variant="dark" className="mb-0" style={{border: 'none'}}>
-                      <thead>
+                  <div className="table-responsive" style={{maxHeight: 'calc(100vh - 300px)', overflowY: 'auto'}}>
+                    <Table hover variant="dark" className="mb-0" style={{border: 'none', fontSize: '0.875rem'}}>
+                      <thead style={{position: 'sticky', top: 0, zIndex: 1, background: '#212529'}}>
                         <tr>
-                          <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Form ID</th>
+                          <th style={{borderColor: 'rgba(255,255,255,0.1)'}} className="d-none d-lg-table-cell">Form ID</th>
                           <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Name</th>
-                          <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Institute</th>
-                          <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>College</th>
-                          <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Date of Joining</th>
-                          <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Mode</th>
-                          <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Technology</th>
-                          {/* <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Technology</th> */}
-                          <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Type</th>
-                          <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Actions</th>
+                          <th style={{borderColor: 'rgba(255,255,255,0.1)'}} className="d-none d-xl-table-cell">Institute</th>
+                          <th style={{borderColor: 'rgba(255,255,255,0.1)'}} className="d-none d-lg-table-cell">College</th>
+                          <th style={{borderColor: 'rgba(255,255,255,0.1)'}} className="d-none d-md-table-cell">Date</th>
+                          <th style={{borderColor: 'rgba(255,255,255,0.1)'}} className="d-none d-xl-table-cell">Mode</th>
+                          <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Technology/Course</th>
+                          <th style={{borderColor: 'rgba(255,255,255,0.1)'}} className="d-none d-sm-table-cell">Type</th>
+                          <th style={{borderColor: 'rgba(255,255,255,0.1)', width: '120px'}}>Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -1247,18 +1904,18 @@ const handleDelete = async (id) => {
       </div>
 
       {/* Floating Action Button for Mobile */}
-      <div className="d-md-none position-fixed bottom-0 end-0 m-3" style={{zIndex: 1050}}>
+      <div className="d-md-none position-fixed bottom-0 end-0 m-2 m-sm-3" style={{zIndex: 1050}}>
         <Button
           variant="primary"
           onClick={handleAddNewStudent}
           className="rounded-circle d-flex align-items-center justify-content-center"
           style={{ 
-            width: '60px', 
-            height: '60px',
+            width: '50px', 
+            height: '50px',
             boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
           }}
         >
-          <i className="bi bi-plus fs-4"></i>
+          <i className="bi bi-plus fs-5"></i>
         </Button>
       </div>
 
@@ -1270,23 +1927,23 @@ const handleDelete = async (id) => {
         contentClassName="bg-dark"
         size="sm"
       >
-        <Modal.Header closeButton className="bg-dark text-white border-secondary">
+        <Modal.Header closeButton className="bg-dark text-white border-secondary py-2">
           <Modal.Title className="fs-6">
             <i className="bi bi-person-plus me-2"></i>
             Select Enrollment Type
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body className="bg-dark text-white text-center py-4">
-          <div className="row g-3">
+        <Modal.Body className="bg-dark text-white text-center py-3">
+          <div className="row g-2">
             <div className="col-12">
               <div 
                 className="card bg-dark border-warning h-100 cursor-pointer"
                 style={{ cursor: 'pointer' }}
                 onClick={() => handleTypeSelect('project')}
               >
-                <div className="card-body text-center py-4">
-                  <i className="bi bi-folder text-warning fs-1"></i>
-                  <h5 className="mt-3 mb-2">Project</h5>
+                <div className="card-body text-center py-3">
+                  <i className="bi bi-folder text-warning fs-2"></i>
+                  <h6 className="mt-2 mb-1">Project</h6>
                   <p className="text-light opacity-75 mb-0 small">Register for project work</p>
                 </div>
               </div>
@@ -1297,9 +1954,9 @@ const handleDelete = async (id) => {
                 style={{ cursor: 'pointer' }}
                 onClick={() => handleTypeSelect('internship')}
               >
-                <div className="card-body text-center py-4">
-                  <i className="bi bi-briefcase text-info fs-1"></i>
-                  <h5 className="mt-3 mb-2">Internship</h5>
+                <div className="card-body text-center py-3">
+                  <i className="bi bi-briefcase text-info fs-2"></i>
+                  <h6 className="mt-2 mb-1">Internship</h6>
                   <p className="text-light opacity-75 mb-0 small">Register for internship</p>
                 </div>
               </div>
@@ -1321,34 +1978,33 @@ const handleDelete = async (id) => {
         contentClassName="bg-dark"
         scrollable
       >
-        <Modal.Header closeButton className="bg-dark text-white border-secondary">
+        <Modal.Header closeButton className="bg-dark text-white border-secondary py-2">
           <Modal.Title className="fs-6">
             <i className="bi bi-person-plus me-2"></i>
             {editingStudent ? 'Edit Student' : `Add New ${selectedType === 'project' ? 'Project' : 'Internship'} Student`}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body className="bg-dark text-white p-0">
+        <Modal.Body className="bg-dark text-white p-0" style={{maxHeight: '80vh'}}>
           {selectedType === 'project' ? (
-            
             <ProjectForm
-            student={editingStudent}
+              student={editingStudent}
               onSave={handleAddStudent}
               onCancel={() => {
                 setShowForm(false);
                 setEditingStudent(null);
                 setSelectedType('');
-              }}/>
-
+              }}
+            />
           ) : (
-            
             <InternshipForm
-            student={editingStudent}
+              student={editingStudent}
               onSave={handleAddStudent}
               onCancel={() => {
                 setShowForm(false);
                 setEditingStudent(null);
                 setSelectedType('');
-              }}/>
+              }}
+            />
           )}
         </Modal.Body>
       </Modal>

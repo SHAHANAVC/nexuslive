@@ -488,7 +488,7 @@ a{
 }
 
 body, html {
-  background-color: #121212; /* full dark background */
+  background-color: #121212; 
   color: white;
   margin: 0;
   padding: 0;
