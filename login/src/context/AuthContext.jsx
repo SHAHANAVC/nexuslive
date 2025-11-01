@@ -112,9 +112,13 @@ export const AuthProvider = ({ children }) => {
   });
 
   const login = async (email, password) => {
+    console.log(email,password);
+    
     try {
       console.log('🔐 Attempting login...');
       const res = await api.post("/auth/login", { email, password });
+      console.log(res);
+      
       const { staff, accessToken } = res.data;
 
       // Set authorization header

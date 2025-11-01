@@ -56,7 +56,7 @@
 // src/api.js
 import axios from 'axios';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://192.168.1.84:5000/api';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://192.168.1.88:5000/api';
 
 // ✅ SIMPLE API CONFIG - NO INTERCEPTORS
 const api = axios.create({

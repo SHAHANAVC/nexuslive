@@ -1,10 +1,31 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Card, Form, Button, Modal, Alert, Badge  } from 'react-bootstrap';
+import api from '../../api';
+import { useEffect } from 'react';
 
-function Profile({ staffData }) {
+function StaffProfile({ staffData }) { 
+    const [allstaffDetails, setAllstaffDetails] = useState({})
+   const staffID = staffData.id
+   console.log(staffID);
 
-  console.log(staffData, "staffdata of Admin staff ---------------------------------------------------");
-  
+   const allstaffData = async()=>{
+    try{
+        const response = await api.get(`/staff/staffalldata/${staffID}`)
+        console.log(response,"Staff All DATASSSSSSSSSSSSS");
+        setAllstaffDetails(response.data.StaffDetails)
+        
+    }
+    catch(e){
+        console.log(e);
+        
+    }
+   }
+
+   useEffect(()=>{allstaffData()},[])
+   
+
+
+    
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
@@ -107,12 +128,12 @@ function Profile({ staffData }) {
                     color: 'white'
                   }}
                 >
-                  {staffData.name?.charAt(0) || 'A'}
+                  {allstaffDetails.name?.charAt(0) || 'A'}
                 </div>
                 <div>
-                  <h4 className="text-white mb-1">{staffData.name}</h4>
-                  <Badge bg={getStatusVariant(staffData.status)} className="text-capitalize">
-                    {staffData.status}
+                  <h4 className="text-white mb-1">{allstaffDetails.name}</h4>
+                  <Badge bg={getStatusVariant(allstaffDetails.status)} className="text-capitalize">
+                    {allstaffDetails.status}
                   </Badge>
                 </div>
               </div>
@@ -125,31 +146,31 @@ function Profile({ staffData }) {
                 <Col sm={6}>
                   <div>
                     <small className="text-white">Employee ID</small>
-                    <p className="text-white mb-0 fw-semibold">{staffData.employeeId}</p>
+                    <p className="text-white mb-0 fw-semibold">{allstaffDetails.employeeId}</p>
                   </div>
                 </Col>
                 <Col sm={6}>
                   <div>
                     <small className="text-white">Email</small>
-                    <p className="text-white mb-0 fw-semibold">{staffData.email}</p>
+                    <p className="text-white mb-0 fw-semibold">{allstaffDetails.email}</p>
                   </div>
                 </Col>
                 <Col sm={6}>
                   <div>
                     <small className="text-white">Phone</small>
-                    <p className="text-white mb-0 fw-semibold">{staffData.phone}</p>
+                    <p className="text-white mb-0 fw-semibold">{allstaffDetails.phone}</p>
                   </div>
                 </Col>
                 <Col sm={6}>
                   <div>
                     <small className="text-white">Address</small>
-                    <p className="text-white mb-0 fw-semibold">{staffData.address}</p>
+                    <p className="text-white mb-0 fw-semibold">{allstaffDetails.address}</p>
                   </div>
                 </Col>
                 <Col sm={12}>
                   <div>
                     <small className="text-white">Qualification</small>
-                    <p className="text-white mb-0 fw-semibold">{staffData.qualification}</p>
+                    <p className="text-white mb-0 fw-semibold">{allstaffDetails.qualification}</p>
                   </div>
                 </Col>
               </Row>
@@ -169,25 +190,25 @@ function Profile({ staffData }) {
                 <Col sm={6}>
                   <div>
                     <small className="text-white">Role</small>
-                    <p className="text-white mb-0 fw-semibold text-capitalize">{staffData.role}</p>
+                    <p className="text-white mb-0 fw-semibold text-capitalize">{allstaffDetails.role}</p>
                   </div>
                 </Col>
                 <Col sm={6}>
                   <div>
                     <small className="text-white">Department</small>
-                    <p className="text-white mb-0 fw-semibold">{staffData.department}</p>
+                    <p className="text-white mb-0 fw-semibold">{allstaffDetails.department}</p>
                   </div>
                 </Col>
                 <Col sm={6}>
                   <div>
                     <small className="text-white">Designation</small>
-                    <p className="text-white mb-0 fw-semibold">{staffData.designation}</p>
+                    <p className="text-white mb-0 fw-semibold">{allstaffDetails.designation}</p>
                   </div>
                 </Col>
                 <Col sm={6}>
                   <div>
                     <small className="text-white">Date of Joining</small>
-                    <p className="text-white mb-0 fw-semibold">{formatDate(staffData.dateOfJoining)}</p>
+                    <p className="text-white mb-0 fw-semibold">{formatDate(allstaffDetails.dateOfJoining)}</p>
                   </div>
                 </Col>
                 {/* <Col sm={6}>
@@ -201,24 +222,24 @@ function Profile({ staffData }) {
               {/* Emergency Contact */}
               <div className="mt-4 pt-3 border-top" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
                 <h6 className="text-white mb-3">Emergency Contact</h6>
-                {staffData.emergencyContact ? (
+                {allstaffDetails.emergencyContact ? (
                   <Row className="g-3">
                     <Col sm={6}>
                       <div>
                         <small className="text-white">Name</small>
-                        <p className="text-white mb-0 fw-semibold">{staffData.emergencyContact.name}</p>
+                        <p className="text-white mb-0 fw-semibold">{allstaffDetails.emergencyContact.name}</p>
                       </div>
                     </Col>
                     <Col sm={6}>
                       <div>
                         <small className="text-white">Phone</small>
-                        <p className="text-white mb-0 fw-semibold">{staffData.emergencyContact.phone}</p>
+                        <p className="text-white mb-0 fw-semibold">{allstaffDetails.emergencyContact.phone}</p>
                       </div>
                     </Col>
                     <Col sm={12}>
                       <div>
                         <small className="text-white">Relation</small>
-                        <p className="text-white mb-0 fw-semibold">{staffData.emergencyContact.relation}</p>
+                        <p className="text-white mb-0 fw-semibold">{allstaffDetails.emergencyContact.relation}</p>
                       </div>
                     </Col>
                   </Row>
@@ -336,4 +357,4 @@ function Profile({ staffData }) {
   );
 }
 
-export default Profile;
+export default StaffProfile;

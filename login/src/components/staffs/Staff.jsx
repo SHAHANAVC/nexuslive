@@ -312,16 +312,31 @@ import {
   Dropdown,
 } from "react-bootstrap";
 import Staffdash from "./Staffdash";
+import { useAuth } from "../../context/AuthContext";
+import StaffProfile from "./StaffProfile";
+import { useNavigate } from "react-router-dom";
+
 
 function Staff() {
   const [activePage, setActivePage] = useState("dashboard");
+    const { auth, logout } = useAuth();
+    const userData = auth.user;
+//   const userName = userData?.name || 'staff';
+// console.log(userData,userName);
+// const navigate = useNavigate()
+const navigate = useNavigate();
+
+  
+  const handleLogout = async () => {
+    await logout();
+  };
 
   const renderPage = () => {
     switch (activePage) {
       case "dashboard":
-        return <Staffdash/>;
+        return <Staffdash staffData={userData}/>;
       case "settings":
-        return ;
+        return <StaffProfile staffData={userData}/>;
       case "clients":
       case "projects":
       case "tasks":
@@ -477,7 +492,7 @@ function Staff() {
                     background: "rgba(255, 255, 255, 0.1)",
                   }}
                 >
-                  <img
+                  {/* <img
                     src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face"
                     alt="User"
                     className="rounded-circle me-2"
@@ -486,8 +501,22 @@ function Staff() {
                       height: "32px",
                       objectFit: "cover",
                     }}
-                  />
-                  <span className="d-none d-lg-inline">Staff User</span>
+                  /> */}
+
+                  <div 
+                  className="rounded-circle d-flex align-items-center justify-content-center me-3"
+                  style={{
+                    width: '60px',
+                    height: '60px',
+                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    fontSize: '1.5rem',
+                    fontWeight: '600',
+                    color: 'white'
+                  }}
+                >
+                  {userData.name?.charAt(0) || 'A'}
+                </div>
+                  <span className="d-none d-lg-inline">{userData.name}</span>
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu 
@@ -501,7 +530,7 @@ function Staff() {
                 >
                   <Dropdown.Header>
                     <div className="d-flex align-items-center">
-                      <img
+                      {/* <img
                         src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face"
                         alt="User"
                         className="rounded-circle me-2"
@@ -510,10 +539,24 @@ function Staff() {
                           height: "40px",
                           objectFit: "cover",
                         }}
-                      />
+                      /> */}
+
+                      <div 
+                  className="rounded-circle d-flex align-items-center justify-content-center me-3"
+                  style={{
+                    width: '60px',
+                    height: '60px',
+                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    fontSize: '1.5rem',
+                    fontWeight: '600',
+                    color: 'white'
+                  }}
+                >
+                  {userData.name?.charAt(0) || 'A'}
+                </div>
                       <div>
-                        <div className="fw-bold">Staff User</div>
-                        <small className="text-muted">staff@example.com</small>
+                        <div className="fw-bold">{userData.name}</div>
+                        <small className="text-muted">{userData.email}</small>
                       </div>
                     </div>
                   </Dropdown.Header>
@@ -532,7 +575,7 @@ function Staff() {
                     <i className="bi bi-gear me-2"></i>
                     Settings
                   </Dropdown.Item>
-                  <Dropdown.Item href="#profile" className="text-dark d-flex align-items-center">
+                  <Dropdown.Item  className="text-dark d-flex align-items-center" onClick={() => navigate("/staff/profile")}>
                     <i className="bi bi-person me-2"></i>
                     Profile
                   </Dropdown.Item>
@@ -541,10 +584,19 @@ function Staff() {
                     Help & Support
                   </Dropdown.Item>
                   <Dropdown.Divider />
-                  <Dropdown.Item href="#logout" className="text-dark d-flex align-items-center">
+                  {/* <Dropdown.Item href="#logout" className="text-dark d-flex align-items-center" onClick={handleLogout}>
                     <i className="bi bi-box-arrow-right me-2"></i>
                     Sign Out
-                  </Dropdown.Item>
+                  </Dropdown.Item> */}
+                  <Dropdown.Item
+  as="button"
+  className="text-dark d-flex align-items-center"
+  onClick={handleLogout}
+>
+  <i className="bi bi-box-arrow-right me-2"></i>
+  Sign Out
+</Dropdown.Item>
+
                 </Dropdown.Menu>
               </Dropdown>
             </Nav>
