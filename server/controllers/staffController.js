@@ -229,3 +229,22 @@ export const changeStaffPassword = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
+export const AllStaffData = async (req,res)=>{
+  // console.log(req.params);
+  const {staffID} = req.params
+  console.log(staffID);
+  try{
+    const StaffDetails = await Staff.findById(staffID)
+    // console.log(StaffDetails);
+   if (!StaffDetails) return res.status(404).json({ message: "Staff not found" });
+    res.status(200).json({ message: "Details fetched successfully", StaffDetails });
+    
+  }
+  catch(e){
+    console.log(e);
+    res.status(500).json({ message: "Server error" });
+  }
+  
+}

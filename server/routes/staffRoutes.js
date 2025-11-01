@@ -6,7 +6,8 @@ import {
   getStaffById, 
   updateStaff, 
   deleteStaff, 
-  changeStaffPassword 
+  changeStaffPassword, 
+  AllStaffData
 } from "../controllers/staffController.js";
 import { protect } from "../middleware/authMiddleware.js";
 
@@ -19,5 +20,6 @@ router.put("/:id", updateStaff);
 router.put("/:staffId/role", updateStaffRole);
 router.delete("/:id", deleteStaff);
 router.put("/:id/change-password", changeStaffPassword);
+router.get("/staffalldata/:staffID",AllStaffData)
 
 export default router;

@@ -1,19 +1,133 @@
 import Student from "../models/Student.js";
 import { getChangedFields } from "../utils/getChangedFields.js";
 
+// // 🟢 Create new student (internship or project)
+// export const createStudent = async (req, res) => {
+//   try {
+//     const { institution, category } = req.body;
+// console.log(req.body);
+
+//     // Generate prefix (TRY/NEX)
+//     const prefix = institution === "nexus" ? "NEX" : "TRY";
+
+//     // Find last entry with same prefix
+//     const last = await Student.findOne({ formId: new RegExp(`^${prefix}`) }).sort({ createdAt: -1 });
+//     const nextNumber = last ? parseInt(last.formId.slice(prefix.length), 10) + 1 : 1;
+//     const formId = `${prefix}${String(nextNumber).padStart(4, "0")}`;
+
+//     const newStudent = new Student({ ...req.body, formId });
+//     await newStudent.save();
+
+//     res.status(201).json({
+//       success: true,
+//       message: "Student registered successfully",
+//       data: { formId },
+//     });
+//   } catch (err) {
+//     console.error("❌ Error creating student:", err);
+//     res.status(500).json({ success: false, message: "Server Error" });
+//   }
+// };
+// 🟢 Create new student (internship or project)
+// export const createStudent = async (req, res) => {
+//   try {
+//     const { institution, category } = req.body;
+//     console.log(req.body);
+
+//     // Generate prefix (TRY/NEX)
+//     const prefix = institution === "nexus" ? "NEX" : "TRY";
+
+//     // Get academic year (June to May)
+//     const getAcademicYear = () => {
+//       const now = new Date();
+//       const year = now.getFullYear();
+//       const month = now.getMonth() + 1; // January is 1, December is 12
+      
+//       // Academic year: June 2024 to May 2025 = "24"
+//       // Academic year: June 2025 to May 2026 = "25"
+//       if (month >= 6) {
+//         // June to December - use current year
+//         return year.toString().slice(-2);
+//       } else {
+//         // January to May - use previous year  
+//         return (year - 1).toString().slice(-2);
+//       }
+//     };
+
+//     const academicYear = getAcademicYear();
+
+//     // Find last entry with same prefix and academic year
+//     const last = await Student.findOne({ 
+//       formId: new RegExp(`^${prefix}${academicYear}`) 
+//     }).sort({ createdAt: -1 });
+
+//     let nextNumber = 1;
+    
+//     if (last) {
+//       // Extract the number part from formId (e.g., "TRY24001" -> 1)
+//       const lastNumber = parseInt(last.formId.slice(5), 10); // Skip prefix(3) + year(2)
+//       nextNumber = lastNumber + 1;
+//     }
+
+//     // Format: TRY24001, NEX24001 (3-digit serial)
+//     const formId = `${prefix}${academicYear}${String(nextNumber).padStart(3, "0")}`;
+
+//     const newStudent = new Student({ ...req.body, formId });
+//     await newStudent.save();
+
+//     res.status(201).json({
+//       success: true,
+//       message: "Student registered successfully",
+//       data: { formId },
+//     });
+//   } catch (err) {
+//     console.error("❌ Error creating student:", err);
+//     res.status(500).json({ success: false, message: "Server Error" });
+//   }
+// };
 // 🟢 Create new student (internship or project)
 export const createStudent = async (req, res) => {
   try {
     const { institution, category } = req.body;
-console.log(req.body);
+    console.log(req.body);
 
     // Generate prefix (TRY/NEX)
     const prefix = institution === "nexus" ? "NEX" : "TRY";
 
-    // Find last entry with same prefix
-    const last = await Student.findOne({ formId: new RegExp(`^${prefix}`) }).sort({ createdAt: -1 });
-    const nextNumber = last ? parseInt(last.formId.slice(prefix.length), 10) + 1 : 1;
-    const formId = `${prefix}${String(nextNumber).padStart(4, "0")}`;
+    // Get academic year (June to May) - NEXT year from June
+    const getAcademicYear = () => {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth() + 1; // January is 1, December is 12
+      
+      // Academic year: June 2024 to May 2025 = "25" (NEXT year)
+      // Academic year: June 2025 to May 2026 = "26" (NEXT year)
+      if (month >= 6) {
+        // June to December - use NEXT year
+        return (year + 1).toString().slice(-2);
+      } else {
+        // January to May - use CURRENT year
+        return year.toString().slice(-2);
+      }
+    };
+
+    const academicYear = getAcademicYear();
+
+    // Find last entry with same prefix and academic year
+    const last = await Student.findOne({ 
+      formId: new RegExp(`^${prefix}${academicYear}`) 
+    }).sort({ createdAt: -1 });
+
+    let nextNumber = 1;
+    
+    if (last) {
+      // Extract the number part from formId (e.g., "TRY26001" -> 1)
+      const lastNumber = parseInt(last.formId.slice(5), 10); // Skip prefix(3) + year(2)
+      nextNumber = lastNumber + 1;
+    }
+
+    // Format: TRY26001, NEX26001 (3-digit serial)
+    const formId = `${prefix}${academicYear}${String(nextNumber).padStart(3, "0")}`;
 
     const newStudent = new Student({ ...req.body, formId });
     await newStudent.save();
@@ -28,7 +142,6 @@ console.log(req.body);
     res.status(500).json({ success: false, message: "Server Error" });
   }
 };
-
 // 🟡 Get all students
 export const getStudents = async (req, res) => {
   try {
@@ -234,6 +347,8 @@ export const getstudentNamesById = async (req, res) => {
         institution: 1,
         projectName: 1,
         _id: 0,
+        phone:1,
+
       }
     );
 
@@ -250,6 +365,7 @@ export const getstudentNamesById = async (req, res) => {
       formId: stu.formId,
       institution: stu.institution,
       category: stu.category,
+      phone:stu.phone||null,
       studentName:
         stu.category === "internship"
           ? stu.name
