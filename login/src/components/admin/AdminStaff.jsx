@@ -89,17 +89,7 @@ const AdminStaff = () => {
     );
   };
 
-  // const handleStaffAdded = (newStaff) => {
-  //   // Add ID and other necessary fields
-  //   const staffWithId = {
-  //     ...newStaff,
-  //     id: staffMembers.length > 0 ? Math.max(...staffMembers.map(s => s.id)) + 1 : 1
-  //   };
 
-  //   setStaffMembers(prev => [...prev, staffWithId]);
-  //   setShowSuccessAlert(true);
-  //   setTimeout(() => setShowSuccessAlert(false), 3000);
-  // };
   const handleStaffAdded = async () => {
   setShowRegistrationModal(false); // close the modal
   setShowSuccessAlert(true);       // show success alert
@@ -352,7 +342,7 @@ const AdminStaff = () => {
                         <td className="border-secondary">
                           <div>
                             <strong className="text-white d-block">{staff.name}</strong>
-                            <small className="text-light opacity-75 d-block">{staff.email}</small>
+                            <small className="text-light opacity-75 d-block">{staff.phone}</small>
                             <small className="text-light opacity-75 d-block d-md-none">{staff.department}</small>
                             <small className="text-light opacity-75 d-block d-sm-none">{staff.designation}</small>
                           </div>

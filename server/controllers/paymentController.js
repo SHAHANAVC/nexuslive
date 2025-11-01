@@ -1,5 +1,5 @@
 // import Payment from "../models/Payment.js";
-import Payment from "../models/payment.js";
+import Payment from "../models/Payment.js";
 import Registration from "../models/Registration.js";
 import Student from "../models/Student.js";
 

@@ -1,12 +1,8 @@
 import Staff from "../models/staff.js";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import { getChangedFields } from "../utils/getChangedFields.js";
-import Student from "../models/Student.js";
 
 export const registerStaff = async (req, res) => {
-  console.log(req.body);
-
   try {
     const {
       name,
@@ -36,18 +32,15 @@ export const registerStaff = async (req, res) => {
     let employeeId = "0001";
 
     if (lastStaff && lastStaff.employeeId) {
-      // Make sure to parse correctly
       const lastId = parseInt(lastStaff.employeeId, 10);
-
-      // If lastId is NaN, reset to 0
       const newId = isNaN(lastId) ? 1 : lastId + 1;
-      employeeId = newId.toString().padStart(4, "0"); // e.g., 0002
+      employeeId = newId.toString().padStart(4, "0");
     }
 
-    // const hashedPassword = await hashPassword(password);
-    //     // Hash password
+    // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
+    
     const newStaff = new Staff({
       employeeId,
       name,
@@ -64,61 +57,13 @@ export const registerStaff = async (req, res) => {
     });
 
     await newStaff.save();
-    console.log("neweeeeeeeeeee", newStaff);
 
-    res
-      .status(201)
-      .json({ message: "Staff registered successfully", staff: newStaff });
+    res.status(201).json({ 
+      message: "Staff registered successfully", 
+      staff: newStaff 
+    });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server error" });
-  }
-};
-// Login Staff
-export const loginStaff = async (req, res) => {
-  console.log('lll');
-  
-  try {
-    const { email, password } = req.body;
-    console.log(req.body);
-
-    // Validation
-    if (!email || !password) {
-      return res
-        .status(400)
-        .json({ message: "Email and password are required" });
-    }
-    // const staff = await Staff.findOne({ email });
-    const staff = await Staff.findOne({
-      email: { $regex: new RegExp(`^${email}$`, "i") },
-    });
-
-    console.log(staff);
-    if (!staff) return res.status(400).json({ message: "Invalid email " });
-
-    // Compare password
-    const isMatch = await bcrypt.compare(password, staff.password);
-    if (!isMatch)
-      return res.status(400).json({ message: "Invalid email or password" });
-
-    // Update lastLogin
-    // staff.lastLogin = new Date();
-    // await staff.save();
-
-    // Generate JWT token
-    const token = jwt.sign(
-      { id: staff._id, role: staff.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
-
-    res.json({
-      message: "Login successful",
-      token,
-      staff,
-    });
-  } catch (error) {
-    console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -126,7 +71,6 @@ export const loginStaff = async (req, res) => {
 // Get all staff except superadmin
 export const getAllStaff = async (req, res) => {
   try {
-    // Fetch staff where role is not superadmin
     const staffList = await Staff.find({ role: { $ne: "superAdmin" } }).sort({
       createdAt: -1,
     });
@@ -139,24 +83,19 @@ export const getAllStaff = async (req, res) => {
 
 export const updateStaffRole = async (req, res) => {
   try {
-    const { staffId } = req.params; // ID of the staff to update
-    const { role } = req.body; // New role
-    console.log(staffId, role);
+    const { staffId } = req.params;
+    const { role } = req.body;
 
     // Validate role
     if (!role || !["staff", "admin"].includes(role)) {
-      return res
-        .status(400)
-        .json({ message: "Invalid role. Allowed: 'staff' or 'admin'" });
+      return res.status(400).json({ message: "Invalid role. Allowed: 'staff' or 'admin'" });
     }
 
     // Prevent changing superAdmin role
     const staff = await Staff.findById(staffId);
     if (!staff) return res.status(404).json({ message: "Staff not found" });
     if (staff.role === "superAdmin") {
-      return res
-        .status(403)
-        .json({ message: "Cannot change role of superAdmin" });
+      return res.status(403).json({ message: "Cannot change role of superAdmin" });
     }
 
     staff.role = role;
@@ -168,12 +107,12 @@ export const updateStaffRole = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-// ✅ Get Staff by ID (used for viewing or editing)
+
+// Get Staff by ID
 export const getStaffById = async (req, res) => {
   try {
     const { id } = req.params;
-
-    const staff = await Staff.findById(id).select("-password"); // don’t send password
+    const staff = await Staff.findById(id).select("-password");
 
     if (!staff) {
       return res.status(404).json({ message: "Staff not found" });
@@ -181,9 +120,7 @@ export const getStaffById = async (req, res) => {
 
     // Prevent normal staff from viewing superAdmin details
     if (staff.role === "superAdmin" && req.user.role !== "superAdmin") {
-      return res
-        .status(403)
-        .json({ message: "Access denied to SuperAdmin details" });
+      return res.status(403).json({ message: "Access denied to SuperAdmin details" });
     }
 
     res.status(200).json({ success: true, staff });
@@ -193,98 +130,13 @@ export const getStaffById = async (req, res) => {
   }
 };
 
-// ✏️ Update Staff (Admin or SuperAdmin)
-// export const updateStaff = async (req, res) => {
-//   console.log('uuuuupdate staff');
-
-//   try {
-//     const { id } = req.params;
-//     const updatedData = req.body;
-
-//     // Remove fields that shouldn't be updated
-//     delete updatedData.password;
-//     delete updatedData.employeeId;
-
-//     const staff = await Staff.findById(id);
-//     if (!staff) {
-//       return res.status(404).json({ message: "Staff not found" });
-//     }
-
-//     // Prevent editing superAdmin by normal admins
-//     if (staff.role === "superAdmin" && req.user.role !== "superAdmin") {
-//       return res.status(403).json({ message: "You are not authorized to edit SuperAdmin details" });
-//     }
-
-//     const oldData = staff.toObject();
-
-//     // Update fields dynamically
-//     Object.assign(staff, updatedData);
-//     await staff.save();
-
-//     // 📘 Log this edit (see section 3 below)
-//     await createEditLog({
-//       entityType: "staff",
-//       entityId: staff._id,
-//       editedBy: req.user?.id, // who made the change
-//       changes: getChangedFields(oldData, updatedData),
-//     });
-
-//     res.status(200).json({ message: "Staff updated successfully", staff });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
-// export const updateStaff = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const updatedData = req.body;
-
-//     delete updatedData.password;
-//     delete updatedData.employeeId;
-
-//     const staff = await Staff.findById(id);
-//     if (!staff) return res.status(404).json({ message: "Staff not found" });
-
-//     if (staff.role === "superAdmin" && req.user.role !== "superAdmin") {
-//       return res.status(403).json({ message: "You are not authorized to edit SuperAdmin details" });
-//     }
-
-//     const oldData = staff.toObject();
-
-//     // Find changed fields
-//     const changes = {};
-//     for (const key in updatedData) {
-//       if (oldData[key] !== updatedData[key]) {
-//         changes[key] = { from: oldData[key], to: updatedData[key] };
-//       }
-//     }
-
-//     Object.assign(staff, updatedData);
-
-//     // Push log entry directly into staff doc
-//     staff.editHistory.push({
-//       editedBy: req.user?.id,
-//       changes,
-//       action: 'update',
-//     });
-
-//     await staff.save();
-
-//     res.status(200).json({ message: "Staff updated successfully", staff });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
-// ---------------------------------------------------------------------------------
-
+// Update Staff
 export const updateStaff = async (req, res) => {
   try {
     const { id } = req.params;
     const updatedData = { ...req.body };
 
-    // never allow updating these directly
+    // Never allow updating these directly
     delete updatedData.password;
     delete updatedData.employeeId;
 
@@ -292,14 +144,10 @@ export const updateStaff = async (req, res) => {
     if (!staff) return res.status(404).json({ message: "Staff not found" });
 
     if (staff.role === "superAdmin" && req.user.role !== "superAdmin") {
-      return res
-        .status(403)
-        .json({ message: "You are not authorized to edit SuperAdmin details" });
+      return res.status(403).json({ message: "You are not authorized to edit SuperAdmin details" });
     }
 
     const oldData = staff.toObject();
-
-    // Compute changes only for keys present in updatedData
     const changes = getChangedFields(oldData, updatedData);
 
     // Apply changes to staff document
@@ -316,8 +164,6 @@ export const updateStaff = async (req, res) => {
     }
 
     await staff.save();
-
-    // Optionally populate editedBy in response
     res.status(200).json({ message: "Staff updated successfully", staff });
   } catch (err) {
     console.error(err);
@@ -325,28 +171,26 @@ export const updateStaff = async (req, res) => {
   }
 };
 
-// 🗑️ Delete Staff
+// Delete Staff
 export const deleteStaff = async (req, res) => {
-  console.log(req.params);
-
   try {
     const { id } = req.params;
     const staff = await Staff.findById(id);
-    console.log(staff);
 
     if (!staff) return res.status(404).json({ message: "Staff not found" });
 
     await Staff.findByIdAndDelete(id);
-
     res.status(200).json({ message: "Staff deleted successfully" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };
+
+// Change Staff Password
 export const changeStaffPassword = async (req, res) => {
   try {
-    const { id } = req.params; // staff id
+    const { id } = req.params;
     const { currentPassword, newPassword, confirmPassword } = req.body;
 
     // Validate input
@@ -355,22 +199,15 @@ export const changeStaffPassword = async (req, res) => {
     }
 
     if (newPassword !== confirmPassword) {
-      return res
-        .status(400)
-        .json({ message: "New password and confirm password do not match" });
+      return res.status(400).json({ message: "New password and confirm password do not match" });
     }
 
     const staff = await Staff.findById(id);
     if (!staff) return res.status(404).json({ message: "Staff not found" });
 
-    // Optional: Prevent normal staff from changing other staff's password
-    if (
-      req.user.role !== "superAdmin" &&
-      req.user.id !== staff._id.toString()
-    ) {
-      return res
-        .status(403)
-        .json({ message: "You are not authorized to change this password" });
+    // Prevent normal staff from changing other staff's password
+    if (req.user.role !== "superAdmin" && req.user.id !== staff._id.toString()) {
+      return res.status(403).json({ message: "You are not authorized to change this password" });
     }
 
     // Verify current password
@@ -392,6 +229,3 @@ export const changeStaffPassword = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
-
-

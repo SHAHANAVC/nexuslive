@@ -1,16 +1,23 @@
 import express from "express";
-import { registerStaff, loginStaff, getAllStaff, updateStaffRole, updateStaff, deleteStaff } from "../controllers/staffController.js";
+import { 
+  registerStaff, 
+  getAllStaff, 
+  updateStaffRole, 
+  getStaffById, 
+  updateStaff, 
+  deleteStaff, 
+  changeStaffPassword 
+} from "../controllers/staffController.js";
+import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// Register new staff
 router.post("/register", registerStaff);
-
-// Staff login
-router.post("/login", loginStaff);
-
-router.get('/all',getAllStaff)
+router.get("/all", getAllStaff);
+router.get("/:id", getStaffById);
+router.put("/:id", updateStaff);
 router.put("/:staffId/role", updateStaffRole);
-router.put('/:id',updateStaff)
-router.delete('/:id',deleteStaff)
+router.delete("/:id", deleteStaff);
+router.put("/:id/change-password", changeStaffPassword);
+
 export default router;

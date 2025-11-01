@@ -20,11 +20,11 @@ import Adminstudent from "../admin/Adminstudent";
 import PaymentView from "../admin/ViewPayment";
 import SuperadminStudent from "./SuperadminStudent";
 // import StaffRegistration from "../StaffRegistration";
-
+import { useAuth } from "../../context/AuthContext"; 
 function Superadmin() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activePage, setActivePage] = useState("dashboard");
-
+const { auth, logout } = useAuth()
   const renderPage = () => {
     switch (activePage) {
       case "dashboard":
@@ -33,9 +33,9 @@ function Superadmin() {
       case "staffs": return <ViewStaff/>
       case "students": return <SuperadminStudent/>
       case "payment": return <PaymentView/>
-        case "settings":
+        // case "settings":
       case "tasks":
-      case "reports":
+      // case "reports":
         // Return a placeholder or actual component
         return (
           <Container fluid>
@@ -53,7 +53,17 @@ function Superadmin() {
         return <Dashboard />;
     }
   };
-
+const handleLogout = async () => {
+  // ✅ Optional: Add confirmation dialog
+  if (window.confirm('Are you sure you want to logout?')) {
+    try {
+      console.log('🚪 Logging out...');
+      await logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  }
+};
   // Function to handle navigation clicks
   const handleNavigation = (pageName) => {
     const pageKey = pageName.toLowerCase();
@@ -71,8 +81,8 @@ function Superadmin() {
     { key: "students", label: "Students", icon: "people" },
     { key: "tasks", label: "Tasks", icon: "check-square" },
     { key: "payment", label: "Payment", icon: "credit-card" },
-    { key: "reports", label: "Reports", icon: "graph-up" },
-    { key: "settings", label: "Settings", icon: "gear" },
+    // { key: "reports", label: "Reports", icon: "graph-up" },
+    // { key: "settings", label: "Settings", icon: "gear" },
   ];
 
   return (
@@ -133,10 +143,10 @@ function Superadmin() {
               <Nav.Link
                 href="#"
                 className="text-white d-flex align-items-center gap-2 py-2 px-3 rounded"
-                onClick={(e) => e.preventDefault()}
+                onClick={handleLogout}
               >
-                <i className="bi bi-question-circle"></i>
-                Help & Support
+                <i className="bi bi-box-arrow-right me-2"></i>
+                Logout
               </Nav.Link>
             </div>
           </div>
@@ -174,7 +184,7 @@ function Superadmin() {
             </div>
 
             {/* Search Bar - Hidden on mobile */}
-            <Form className="d-none d-lg-flex me-auto">
+            {/* <Form className="d-none d-lg-flex me-auto">
               <InputGroup style={{ width: "300px" }}>
                 <Form.Control
                   type="search"
@@ -198,10 +208,10 @@ function Superadmin() {
                   <i className="bi bi-search"></i>
                 </Button>
               </InputGroup>
-            </Form>
+            </Form> */}
 
             {/* Three Dots Menu - Visible on small screens */}
-            <Dropdown className="d-lg-none">
+            {/* <Dropdown className="d-lg-none">
               <Dropdown.Toggle
                 variant="outline-light"
                 id="mobile-menu"
@@ -227,11 +237,10 @@ function Superadmin() {
                   Sign Out
                 </Dropdown.Item>
               </Dropdown.Menu>
-            </Dropdown>
+            </Dropdown> */}
 
             {/* Desktop Navigation Items */}
-            <div className="d-none d-lg-flex align-items-center">
-              {/* Regular Desktop Dropdown */}
+            {/* <div className="d-none d-lg-flex align-items-center">
               <Dropdown align="end">
                 <Dropdown.Toggle
                   variant="outline-light"
@@ -270,7 +279,7 @@ function Superadmin() {
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
-            </div>
+            </div> */}
           </Container>
         </Navbar>
 

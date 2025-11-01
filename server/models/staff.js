@@ -7,11 +7,11 @@ const staffSchema = new Schema({
   employeeId: {
     type: String,
     // unique: true,
-    required: true,
+    // required: true,
   },
   name: {
     type: String,
-    required: true,
+    // required: true,
     trim: true,
   },
   email: {
@@ -26,20 +26,20 @@ const staffSchema = new Schema({
   },
   address: {
     type: String,
-    required: true,
+    // required: true,
   },
   phone: {
     type: String,
-    required: true,
+    // required: true,
     unique: true,
   },
   qualification: {
     type: String,
-    required: true,
+    // required: true,
   },
   dateOfJoining: {
     type: Date,
-    required: true,
+    // required: true,
   },
   role: {
     type: String,
