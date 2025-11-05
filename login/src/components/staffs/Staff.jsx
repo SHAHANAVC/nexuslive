@@ -315,6 +315,8 @@ import Staffdash from "./Staffdash";
 import { useAuth } from "../../context/AuthContext";
 import StaffProfile from "./StaffProfile";
 import { useNavigate } from "react-router-dom";
+import StaffTasks from "./StaffTasks";
+import StaffViewTasks from "./StaffTasks";
 
 
 function Staff() {
@@ -335,13 +337,14 @@ const navigate = useNavigate();
     switch (activePage) {
       case "dashboard":
         return <Staffdash staffData={userData}/>;
-      case "settings":
+      case "profile":
         return <StaffProfile staffData={userData}/>;
-      case "clients":
+        case "tasks": 
+          return <StaffViewTasks userData={userData}/>
+      // case "clients":
+      // case "reports":
       case "projects":
-      case "tasks":
       case "calendar":
-      case "reports":
         return (
           <Container fluid>
             <Row className="mb-4">
@@ -368,12 +371,12 @@ const navigate = useNavigate();
   // Menu items configuration for dropdown
   const menuItems = [
     { key: "dashboard", label: "Dashboard", icon: "speedometer2" },
-    { key: "clients", label: "Clients", icon: "people" },
+    // { key: "clients", label: "Clients", icon: "people" },
     { key: "projects", label: "Projects", icon: "folder" },
     { key: "tasks", label: "Tasks", icon: "check-square" },
     { key: "calendar", label: "Calendar", icon: "calendar" },
-    { key: "reports", label: "Reports", icon: "graph-up" },
-    { key: "settings", label: "Settings", icon: "gear" },
+    // { key: "reports", label: "Reports", icon: "graph-up" },
+    { key: "profile", label: "Profile", icon: "person" },
   ];
 
   const getActiveItem = () => {
@@ -506,15 +509,15 @@ const navigate = useNavigate();
                   <div 
                   className="rounded-circle d-flex align-items-center justify-content-center me-3"
                   style={{
-                    width: '60px',
-                    height: '60px',
+                    width: '40px',
+                    height: '40px',
                     background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                     fontSize: '1.5rem',
                     fontWeight: '600',
                     color: 'white'
                   }}
                 >
-                  {userData.name?.charAt(0) || 'A'}
+                  {userData.name?.charAt(0).toUpperCase() || 'A'}
                 </div>
                   <span className="d-none d-lg-inline">{userData.name}</span>
                 </Dropdown.Toggle>
@@ -544,8 +547,8 @@ const navigate = useNavigate();
                       <div 
                   className="rounded-circle d-flex align-items-center justify-content-center me-3"
                   style={{
-                    width: '60px',
-                    height: '60px',
+                    width: '40px',
+                    height: '40px',
                     background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                     fontSize: '1.5rem',
                     fontWeight: '600',
@@ -561,7 +564,7 @@ const navigate = useNavigate();
                     </div>
                   </Dropdown.Header>
                   <Dropdown.Divider />
-                  <Dropdown.Item
+                  {/* <Dropdown.Item
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();
@@ -574,15 +577,15 @@ const navigate = useNavigate();
                   >
                     <i className="bi bi-gear me-2"></i>
                     Settings
-                  </Dropdown.Item>
-                  <Dropdown.Item  className="text-dark d-flex align-items-center" onClick={() => navigate("/staff/profile")}>
+                  </Dropdown.Item> */}
+                  <Dropdown.Item  className="text-dark d-flex align-items-center"onClick={(e) => { e.preventDefault(); handleNavigation("profile"); }}>
                     <i className="bi bi-person me-2"></i>
                     Profile
                   </Dropdown.Item>
-                  <Dropdown.Item href="#help" className="text-dark d-flex align-items-center">
+                  {/* <Dropdown.Item href="#help" className="text-dark d-flex align-items-center">
                     <i className="bi bi-question-circle me-2"></i>
                     Help & Support
-                  </Dropdown.Item>
+                  </Dropdown.Item> */}
                   <Dropdown.Divider />
                   {/* <Dropdown.Item href="#logout" className="text-dark d-flex align-items-center" onClick={handleLogout}>
                     <i className="bi bi-box-arrow-right me-2"></i>

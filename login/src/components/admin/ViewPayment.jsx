@@ -721,7 +721,10 @@ import api from '../../api';
 import Payment from './Payment';
 import { Modal } from 'react-bootstrap';
 
-const PaymentView = () => {
+const PaymentView = ({staffData}) => {
+  // console.log(staffData,'staffdata in payment pageeeeeeeeeeeeeeeeeeeeeeeee');
+
+  
   const navigate = useNavigate();
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -729,6 +732,7 @@ const PaymentView = () => {
   const [filters, setFilters] = useState({
     category: 'all',
     paymentMethod: 'all',
+    institution: 'all',
     startDate: '',
     endDate: '',
     search: ''
@@ -761,6 +765,11 @@ const PaymentView = () => {
         if (filters.paymentMethod !== 'all') {
           filteredData = filteredData.filter(payment => payment.paymentMethod === filters.paymentMethod);
         }
+
+        if (filters.institution !== 'all') {
+           filteredData = filteredData.filter(payment => payment.institution === filters.institution);
+        }
+
         
         if (filters.search) {
           const searchTerm = filters.search.toLowerCase();
@@ -797,6 +806,7 @@ const PaymentView = () => {
     const resetFilters = {
       category: 'all',
       paymentMethod: 'all',
+      institution: 'all', 
       startDate: '',
       endDate: '',
       search: ''
@@ -889,12 +899,26 @@ const PaymentView = () => {
         </div>
 
         {/* Institution */}
+        <div className='row'>
+        <Col xs={6}>
         <div className="mb-2">
           <small className="text-light opacity-75 d-block" style={{fontSize: '0.7rem'}}>Institution</small>
           <div className="text-truncate small" style={{fontSize: '0.8rem'}}>
             {payment.institution}
           </div>
         </div>
+        </Col>
+        <Col xs={6}>
+        <div className="mb-2">
+          <small className="text-light opacity-75 d-block" style={{fontSize: '0.7rem'}}>Added by</small>
+          <div className="text-truncate small" style={{fontSize: '0.8rem'}}>
+            {payment.staffname}
+          </div>
+        </div>
+        </Col>
+        </div>
+
+        
       </Card.Body>
     </Card>
   );
@@ -1000,6 +1024,22 @@ const PaymentView = () => {
           {payment.institution}
         </span>
       </td>
+      <td 
+        style={{
+          borderColor: 'rgba(255,255,255,0.1)',
+          padding: '8px 6px',
+          fontSize: '0.8rem'
+        }}
+      >
+        <div className="fw-bold text-truncate small" style={{maxWidth: '120px'}}>
+          {payment.staffname || 'N/A'}
+        </div>
+        {payment.staffemail && (
+          <small className="text-light opacity-75 d-block text-truncate" style={{fontSize: '0.7rem', maxWidth: '120px'}}>
+            {payment.staffemail}
+          </small>
+        )}
+      </td>
     </tr>
   );
 
@@ -1013,6 +1053,7 @@ const PaymentView = () => {
               <h2 className="text-white mb-1 fs-5 fs-sm-4 fs-md-3">Payment History</h2>
               <p className="text-light mb-0 d-none d-md-block small">View and manage all payment transactions</p>
             </div>
+            {/* {staffData.role === 'admin' ?(
             <Button 
               variant="primary" 
               onClick={() => setShowPayment(true)}
@@ -1023,6 +1064,21 @@ const PaymentView = () => {
               <span className="d-none d-sm-inline">Make a Payment</span>
               <span className="d-sm-none">Pay</span>
             </Button>
+            ):(<></>)} */}
+
+            {staffData.role === 'admin' && (
+  <Button 
+    variant="primary" 
+    onClick={() => setShowPayment(true)}
+    className="d-flex align-items-center gap-1 gap-sm-2"
+    size="sm"
+  >
+    <i className="bi bi-credit-card"></i>
+    <span className="d-none d-sm-inline">Make a Payment</span>
+    <span className="d-sm-none">Pay</span>
+  </Button>
+)}
+
 
             <Modal
               show={showPayment}
@@ -1037,7 +1093,7 @@ const PaymentView = () => {
                 <Modal.Title className="fw-semibold text-white">Make a Payment</Modal.Title>
               </Modal.Header>
               <Modal.Body className="p-0">
-                <Payment />
+                <Payment staffData={staffData}/>
               </Modal.Body>
             </Modal>
           </div>
@@ -1111,7 +1167,7 @@ const PaymentView = () => {
         <Card.Body className="p-2 p-sm-3">
           <Row className="g-1 g-sm-2 g-md-3">
             {/* Search */}
-            <Col xs={12} md={4}>
+            <Col xs={12} md={6}>
               <Form.Group>
                 <Form.Label className="fw-medium mb-1 small">Search</Form.Label>
                 <Form.Control
@@ -1137,12 +1193,31 @@ const PaymentView = () => {
                   size="sm"
                   style={{fontSize: '0.875rem'}}
                 >
-                  <option value="all">All Categories</option>
+                  <option value="all">All </option>
                   <option value="project">Project</option>
                   <option value="internship">Internship</option>
                 </Form.Select>
               </Form.Group>
             </Col>
+
+            {/* Institution Filter */}
+<Col xs={6} sm={4} md={2}>
+  <Form.Group>
+    <Form.Label className="fw-medium mb-1 small">Institution</Form.Label>
+    <Form.Select
+      value={filters.institution}
+      onChange={(e) => handleFilterChange('institution', e.target.value)}
+      className="bg-dark text-white border-secondary"
+      size="sm"
+      style={{fontSize: '0.875rem'}}
+    >
+      <option value="all">All</option>
+      <option value="nexus">Nexus</option>
+      <option value="trycode">Trycode</option>
+    </Form.Select>
+  </Form.Group>
+</Col>
+
 
             {/* Payment Method Filter */}
             <Col xs={6} sm={4} md={2}>
@@ -1155,7 +1230,7 @@ const PaymentView = () => {
                   size="sm"
                   style={{fontSize: '0.875rem'}}
                 >
-                  <option value="all">All Methods</option>
+                  <option value="all">All</option>
                   <option value="cash">Cash</option>
                   <option value="gpay">GPay</option>
                 </Form.Select>
@@ -1163,7 +1238,7 @@ const PaymentView = () => {
             </Col>
 
             {/* Date Range Filters */}
-            <Col xs={6} sm={6} md={2}>
+            <Col xs={6} sm={6} md={4}>
               <Form.Group>
                 <Form.Label className="fw-medium mb-1 small">From Date</Form.Label>
                 <Form.Control
@@ -1177,7 +1252,7 @@ const PaymentView = () => {
               </Form.Group>
             </Col>
 
-            <Col xs={6} sm={6} md={2}>
+            <Col xs={6} sm={6} md={4}>
               <Form.Group>
                 <Form.Label className="fw-medium mb-1 small">To Date</Form.Label>
                 <Form.Control
@@ -1299,6 +1374,7 @@ const PaymentView = () => {
                       <th className="border-secondary bg-dark py-2 small">Amount</th>
                       <th className="border-secondary bg-dark py-2 small">Method</th>
                       <th className="border-secondary bg-dark py-2 small">Institution</th>
+                      <th className="border-secondary bg-dark py-2 small">Added by</th>
                     </tr>
                   </thead>
                   <tbody>
