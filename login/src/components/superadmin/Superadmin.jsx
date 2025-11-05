@@ -21,20 +21,23 @@ import PaymentView from "../admin/ViewPayment";
 import SuperadminStudent from "./SuperadminStudent";
 // import StaffRegistration from "../StaffRegistration";
 import { useAuth } from "../../context/AuthContext"; 
+import SuperadminTasks from "./SuperadminTasks";
 function Superadmin() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activePage, setActivePage] = useState("dashboard");
 const { auth, logout } = useAuth()
   const renderPage = () => {
+     const userData = auth.user;
     switch (activePage) {
       case "dashboard":
         return <Dashboard />;
       // Add more cases as you create components
       case "staffs": return <ViewStaff/>
       case "students": return <SuperadminStudent/>
-      case "payment": return <PaymentView/>
+      case "payment": return <PaymentView staffData={userData}/>
         // case "settings":
       case "tasks":
+        return <SuperadminTasks userData={userData}/>
       // case "reports":
         // Return a placeholder or actual component
         return (

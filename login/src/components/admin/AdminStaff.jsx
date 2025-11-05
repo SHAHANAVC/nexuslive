@@ -13,7 +13,7 @@ const AdminStaff = () => {
   const [departmentFilter, setDepartmentFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [selectedStaff, setSelectedStaff] = useState(null);
-  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  // const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(8);
@@ -70,10 +70,10 @@ const AdminStaff = () => {
   const totalPages = Math.ceil(filteredStaff.length / itemsPerPage);
 
   // Staff Management Functions
-  const handleViewDetails = (staff) => {
-    setSelectedStaff(staff);
-    setShowDetailsModal(true);
-  };
+  // const handleViewDetails = (staff) => {
+  //   setSelectedStaff(staff);
+  //   setShowDetailsModal(true);
+  // };
 
   const handleDeleteStaff = (staffId) => {
     setStaffMembers(prev => prev.filter(staff => staff.id !== staffId));
@@ -463,7 +463,7 @@ const AdminStaff = () => {
         )}
 
         {/* Staff Details Modal - Responsive */}
-        <Modal 
+        {/* <Modal 
           show={showDetailsModal} 
           onHide={() => setShowDetailsModal(false)}
           size="lg"
@@ -539,12 +539,12 @@ const AdminStaff = () => {
             <Button 
               variant="primary"
               className="order-1 order-sm-2"
-              onClick={() => {/* Edit functionality */}}
+              onClick={() => {}}
             >
               Edit Staff
             </Button>
           </Modal.Footer>
-        </Modal>
+        </Modal> */}
 
         {/* Staff Registration Form Component */}
         <StaffRegistrationForm

@@ -1884,7 +1884,7 @@ const SuperadminStudent = () => {
                           <th style={{borderColor: 'rgba(255,255,255,0.1)'}} className="d-none d-lg-table-cell">College</th>
                           <th style={{borderColor: 'rgba(255,255,255,0.1)'}} className="d-none d-md-table-cell">Date</th>
                           <th style={{borderColor: 'rgba(255,255,255,0.1)'}} className="d-none d-xl-table-cell">Mode</th>
-                          <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Technology/Course</th>
+                          <th style={{borderColor: 'rgba(255,255,255,0.1)'}}>Technology</th>
                           <th style={{borderColor: 'rgba(255,255,255,0.1)'}} className="d-none d-sm-table-cell">Type</th>
                           <th style={{borderColor: 'rgba(255,255,255,0.1)', width: '120px'}}>Actions</th>
                         </tr>

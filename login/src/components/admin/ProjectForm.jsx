@@ -1580,8 +1580,20 @@ const ProjectForm = ({ student, onSave, onCancel }) => {
     // Validate group members
     formData.groupMembers.forEach((member, index) => {
       if (!member.name) newErrors[`memberName_${index}`] = `Member ${index + 1} name is required`;
-      if (!member.email) newErrors[`memberEmail_${index}`] = `Member ${index + 1} email is required`;
-      if (!member.phone) newErrors[`memberPhone_${index}`] = `Member ${index + 1} phone is required`;
+      if (!member.email){
+         newErrors[`memberEmail_${index}`] = `Member ${index + 1} email is required`
+        }
+       else if (!/\S+@\S+\.\S+/.test(member.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+      
+if (!member.phone) {
+    newErrors[`memberPhone_${index}`] = `Member ${index + 1} phone is required`;
+  } 
+  // ✅ Check if phone is invalid (not 10 digits)
+  else if (!/^\d{10}$/.test(member.phone)) {
+    newErrors[`memberPhone_${index}`] = `Member ${index + 1} must have a valid 10-digit phone number`;
+  }      
       if (!member.regNumber) newErrors[`memberRegno_${index}`] = `Member ${index + 1} Reg No is required`;
     });
 
