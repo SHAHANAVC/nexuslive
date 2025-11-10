@@ -30,9 +30,11 @@ function Profile({ staffData }) {
     newPassword: '',
     confirmPassword: ''
   });
+  // console.log(passwordData);
+  
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
 
-  const handleChangePassword = () => {
+  const handleChangePassword = async () => {
     // Basic validation
     if (!passwordData.currentPassword || !passwordData.newPassword || !passwordData.confirmPassword) {
       setAlert({ show: true, message: 'Please fill all fields', type: 'danger' });
@@ -50,15 +52,30 @@ function Profile({ staffData }) {
     }
 
     // Here you would typically make an API call to change the password
-    console.log('Changing password:', passwordData);
+    // console.log('Changing password:', passwordData);
+    try{
+      const reqres = await api.put(`/staff/${staffID}/change-password`,passwordData)
+      console.log(reqres);
+      setAlert({ show: true, message: 'Password changed successfully!', type: 'success' });
     
-    // Simulate success
-    setAlert({ show: true, message: 'Password changed successfully!', type: 'success' });
-    setTimeout(() => {
-      setShowChangePassword(false);
       setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-      setAlert({ show: false, message: '', type: '' });
-    }, 2000);
+      // setAlert({ show: false, message: '', type: '' });
+      //       setShowChangePassword(false);
+
+        setTimeout(() => {
+    setShowChangePassword(false);
+    setAlert({ show: false, message: '', type: '' });
+  }, 3000);
+
+      
+    }
+    catch(e){
+      console.log(e,"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+setAlert({ show: true, message: e.response?.data?.message || "Error while updating password", type: 'danger' });      
+    }
+    // Simulate success
+   
+    
   };
 
   const formatDate = (dateString) => {
