@@ -181,6 +181,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 export const loginStaff = async (req, res) => {
+  console.log(req.body,'authcontroll');
+  
   try {
     const { email, password } = req.body;
     

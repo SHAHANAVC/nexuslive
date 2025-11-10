@@ -1290,6 +1290,10 @@ const Adminstudent = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [editingStudent, setEditingStudent] = useState(null);
   const [enrollmentFilter, setEnrollmentFilter] = useState('all');
+
+  const [showStatusModal, setShowStatusModal] = useState(false);
+const [selectedStudent, setSelectedStudent] = useState(null);
+const [newStatus, setNewStatus] = useState('notstarted');
   
   const navigate = useNavigate();
 
@@ -1371,8 +1375,92 @@ const Adminstudent = () => {
   const handleViewDetails = (student) => {
     navigate('/student-details', { state: { student } });
   };
+const handleCurrentStatus = (student) => {
+  setSelectedStudent(student);
+  setNewStatus(student.projectStatus);
+  setShowStatusModal(true);
+}; 
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+const fetchData = async ()=>{
+  try{
+    const staffRes = await api.get('/staff/all')
+    console.log(staffRes, "staff of team lead");
+    
+  }
+  catch(e){
+    console.log(e);
+    
+  }
+}
+
+
+
+// const handleSaveStatus = async () => {
+//   if (!selectedStudent) return;
+//   console.log(newStatus,selectedStudent._id,selectedStudent);
+//   const studentId = selectedStudent._id
+  
+
+//   try {
+//     // Update backend
+//     // await api.put(`/registrations/${selectedStudent._id}`, { status: newStatus });
+
+//     // Update local state
+//     // setStudents((prev) =>
+//     //   prev.map((s) =>
+//     //     s._id === selectedStudent._id ? { ...s, status: newStatus } : s
+//     //   )
+//     // );
+
+//     setShowStatusModal(false);
+//     setSelectedStudent(null);
+//   } catch (error) {
+//     console.error('Error updating status:', error);
+//   }
+// };
+
 
   // Mobile Card View - Enhanced for very small screens
+  const handleSaveStatus = async () => {
+    
+    
+  if (!selectedStudent) return;
+
+  const studentId = selectedStudent._id;
+  const newStatus = "dropped";
+  console.log(newStatus);
+
+  try {
+    // ✅ Update status in backend
+    const response = await api.put(`/registrations/${studentId}/projectstatus`, { status: newStatus });
+    console.log(response,"updated statusssssssssssssssssssssssss");
+    
+
+    // ✅ Update local state immediately to reflect changes in UI
+    // setStudents((prev) =>
+    //   prev.map((s) =>
+    //     s._id === studentId ? { ...s, status: newStatus } : s
+    //   )
+    // );
+
+    // ✅ Close modal and clear selection
+    alert("Status updated Successfully!!")
+    setShowStatusModal(false);
+    setSelectedStudent(null);
+    fetchStudents();
+  } catch (error) {
+    alert("Status updation failed!!")
+    console.error("Error updating status:", error);
+
+  }
+};
+
+  
+  
   const MobileStudentCard = ({ student }) => (
     <Card 
       className="bg-dark text-white mb-2 border-secondary"
@@ -1414,7 +1502,7 @@ const Adminstudent = () => {
         {/* Course/Project Info */}
         <div className="mb-2">
           <small className="text-light opacity-75 d-block" style={{fontSize: '0.7rem'}}>
-            {student.category === 'project' ? 'Project' : 'Course'}:
+            {student.category === 'project' ? 'Technology' : 'Technology'}:
           </small>
           <div className="fw-bold text-truncate" style={{fontSize: '0.8rem'}}>
             {student.category === 'project' ? student.technology : student.course}
@@ -1435,13 +1523,17 @@ const Adminstudent = () => {
 
         {/* Date & Mode */}
         <div className="row g-1 mb-2">
-          <Col xs={6}>
+          {/* <Col xs={6}>
             <small className="text-light opacity-75 d-block" style={{fontSize: '0.7rem'}}>Date</small>
             <div style={{fontSize: '0.75rem'}}>{student.dateOfJoining}</div>
-          </Col>
+          </Col> */}
           <Col xs={6}>
             <small className="text-light opacity-75 d-block" style={{fontSize: '0.7rem'}}>Mode</small>
             <div style={{fontSize: '0.75rem'}}>{student.modeOfCourse}</div>
+          </Col>
+          <Col xs={6}>
+            <small className="text-light opacity-75 d-block" style={{fontSize: '0.7rem'}}>Status</small>
+            <div style={{fontSize: '0.75rem'}}>{student.projectStatus}</div>
           </Col>
         </div>
 
@@ -1467,7 +1559,7 @@ const Adminstudent = () => {
             <i className="bi bi-pencil"></i>
             <span className="d-none d-xs-inline">Edit</span>
           </Button>
-          <Button
+          {/* <Button
             variant="outline-danger"
             size="sm"
             onClick={() => handleDelete(student.id)}
@@ -1476,6 +1568,16 @@ const Adminstudent = () => {
           >
             <i className="bi bi-trash"></i>
             <span className="d-none d-xs-inline">Delete</span>
+          </Button> */}
+          <Button
+            variant="outline-danger"
+            size="sm"
+            onClick={() => handleCurrentStatus(student)}
+            title="Edit"
+            className="d-flex align-items-center justify-content-center"
+            style={{width: '32px', height: '32px'}}
+          >
+            <i className="bi bi-trash"></i>
           </Button>
         </div>
       </Card.Body>
@@ -1519,9 +1621,9 @@ const Adminstudent = () => {
       <td style={{borderColor: 'rgba(255,255,255,0.1)'}} className="d-none d-lg-table-cell">
         <div className="text-truncate" style={{maxWidth: '120px'}}>{student.college}</div>
       </td>
-      <td style={{borderColor: 'rgba(255,255,255,0.1)'}} className="d-none d-md-table-cell">
+      {/* <td style={{borderColor: 'rgba(255,255,255,0.1)'}} className="d-none d-md-table-cell">
         <span className="small">{student.dateOfJoining}</span>
-      </td>
+      </td> */}
       <td style={{borderColor: 'rgba(255,255,255,0.1)'}} className="d-none d-xl-table-cell">
         <span className="small">{student.modeOfCourse}</span>
       </td>
@@ -1537,6 +1639,12 @@ const Adminstudent = () => {
           {student.category}
         </span>
       </td>
+      <td style={{borderColor: 'rgba(255,255,255,0.1)'}}>
+  <span className="badge bg-secondary small">
+    {student.projectStatus}
+  </span>
+</td>
+
       <td style={{borderColor: 'rgba(255,255,255,0.1)'}} onClick={(e) => e.stopPropagation()}>
         <div className="d-flex gap-1 flex-nowrap">
           <Button
@@ -1558,6 +1666,16 @@ const Adminstudent = () => {
             style={{width: '32px', height: '32px'}}
           >
             <i className="bi bi-pencil"></i>
+          </Button>
+          <Button
+            variant="outline-danger"
+            size="sm"
+            onClick={() => handleCurrentStatus(student)}
+            title="Edit"
+            className="d-flex align-items-center justify-content-center"
+            style={{width: '32px', height: '32px'}}
+          >
+            <i className="bi bi-trash"></i>
           </Button>
         </div>
       </td>
@@ -1763,10 +1881,11 @@ const Adminstudent = () => {
                           <th className="border-secondary bg-dark py-2 small">Name</th>
                           <th className="border-secondary bg-dark py-2 small d-none d-xl-table-cell">Institute</th>
                           <th className="border-secondary bg-dark py-2 small d-none d-lg-table-cell">College</th>
-                          <th className="border-secondary bg-dark py-2 small d-none d-md-table-cell">Date</th>
+                          {/* <th className="border-secondary bg-dark py-2 small d-none d-md-table-cell">Date</th> */}
                           <th className="border-secondary bg-dark py-2 small d-none d-xl-table-cell">Mode</th>
-                          <th className="border-secondary bg-dark py-2 small">Technology/Course</th>
+                          <th className="border-secondary bg-dark py-2 small">Technology</th>
                           <th className="border-secondary bg-dark py-2 small d-none d-sm-table-cell">Type</th>
+                          <th className="border-secondary bg-dark py-2 small d-none d-sm-table-cell">Status</th>
                           <th className="border-secondary bg-dark py-2 small" style={{width: '100px'}}>Actions</th>
                         </tr>
                       </thead>
@@ -1808,7 +1927,7 @@ const Adminstudent = () => {
         contentClassName="bg-dark"
         size="sm"
       >
-        <Modal.Header closeButton className="bg-dark text-white border-secondary py-2">
+        <Modal.Header closeButton closeVariant="white" className="bg-dark text-white border-secondary py-2">
           <Modal.Title className="fs-6">
             <i className="bi bi-person-plus me-2"></i>
             Select Enrollment Type
@@ -1859,7 +1978,7 @@ const Adminstudent = () => {
         contentClassName="bg-dark"
         scrollable
       >
-        <Modal.Header closeButton className="bg-dark text-white border-secondary py-2">
+        <Modal.Header closeButton closeVariant="white" className="bg-dark text-white border-secondary py-2">
           <Modal.Title className="fs-6">
             <i className="bi bi-person-plus me-2"></i>
             {editingStudent ? 'Edit Student' : `Add New ${selectedType === 'project' ? 'Project' : 'Internship'} Student`}
@@ -1889,6 +2008,63 @@ const Adminstudent = () => {
           )}
         </Modal.Body>
       </Modal>
+
+
+      <Modal 
+  show={showStatusModal} 
+  onHide={() => setShowStatusModal(false)}
+  centered
+  contentClassName="bg-dark text-white"
+  size="sm"
+>
+  <Modal.Header closeButton closeVariant="white" className="border-secondary py-2">
+    <Modal.Title className="fs-6">
+      <i className="bi bi-gear me-2"></i>
+      Change Project Status
+    </Modal.Title>
+  </Modal.Header>
+  {/* <Modal.Body className="bg-dark text-white text-center">
+    <Form.Select
+  className="bg-dark text-white border-secondary mb-3"
+  value={newStatus}
+  onChange={(e) => setNewStatus(e.target.value)}
+>
+  <option value="notstarted" disabled>Not Started</option>
+  <option value="dropped">Dropped</option>
+</Form.Select>
+
+
+    <div className="d-flex justify-content-center gap-2">
+      <Button 
+        variant="secondary" 
+        size="sm" 
+        onClick={() => setShowStatusModal(false)}
+      >
+        Cancel
+      </Button>
+      <Button 
+        variant="primary" 
+        size="sm" 
+        onClick={handleSaveStatus}
+      >
+        Save
+      </Button>
+    </div>
+  </Modal.Body> */}
+  <Modal.Body className="bg-dark text-white text-center">
+  <p>Are you sure you want to mark this project as <strong>Dropped</strong>?</p>
+  <div className="d-flex justify-content-center gap-2">
+    <Button variant="secondary" size="sm" onClick={() => setShowStatusModal(false)}>
+      Cancel
+    </Button>
+    <Button variant="danger" size="sm" onClick={handleSaveStatus}>
+      Confirm Drop
+    </Button>
+  </div>
+</Modal.Body>
+
+</Modal>
+
     </Container>
   );
 };

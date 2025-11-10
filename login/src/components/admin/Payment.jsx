@@ -1852,7 +1852,10 @@ import {
 import api from "../../api";
 import { useNavigate } from "react-router-dom";
 
-function Payment() {
+function Payment({staffData}) {
+
+  // console.log(staffData, 'staff data in payment post pageeeeeeeeeeeeeeeeeeeeeee');
+  
   // State management
   const [id, setId] = useState("");
   const [type, setType] = useState(""); // 'project' or 'internship'
@@ -2121,7 +2124,9 @@ function Payment() {
         }),
         ...(type === "internship" && { 
           internName: internName 
-        })
+        }),
+        staffemail:staffData.email,
+        staffname:staffData.name
       };
 
       console.log("Submitting payment:", paymentData);

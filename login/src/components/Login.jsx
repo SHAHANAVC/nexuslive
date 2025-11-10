@@ -486,7 +486,10 @@ function Login() {
       } else if (auth.user.role === "admin") {
         navigate("/admin");
       } else if (auth.user.role === "staff") {
-        navigate("/staffdash");
+        navigate("/staff");
+      }
+      else if (auth.user.role === "teamlead"){
+        navigate("/teamlead")
       }
     }
   }, [auth.user, auth.token, navigate]);

@@ -334,10 +334,12 @@ import AdminStaff from "./AdminStaff";
 import PaymentView from "./ViewPayment";
 import Profile from "./Profile";
 import { useAuth } from "../../context/AuthContext";
+import AdminTasks from "./AdminTasks";
+import ViewTasks from "./ViewTasks";
 
 function Admin() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [activePage, setActivePage] = useState("dashboard");
+  const [activePage, setActivePage] = useState("adminstudent");
   const { auth, logout } = useAuth();
 
   // Safe data handling
@@ -383,8 +385,6 @@ function Admin() {
 
   const renderPage = () => {
     switch (activePage) {
-      case "dashboard":
-        return <Admindash />;
       case "settings":
         return <Profile staffData={userData} />;
       case "adminstudent": 
@@ -392,20 +392,23 @@ function Admin() {
       case "staffs": 
         return <AdminStaff/>;
       case "payment":
-        return <PaymentView/>;
+        return <PaymentView staffData={userData}/>;
       case "tasks": 
-        return (
-          <Container fluid>
-            <Row className="mb-4">
-              <Col>
-                <h2 className="text-white text-capitalize">{activePage} Page</h2>
-                <p className="text-light">This page is under construction</p>
-              </Col>
-            </Row>
-          </Container>
-        );
+        return <AdminTasks userData={userData}/>
+      case "mytasks":
+        return <ViewTasks userData={userData}/>
+        // return (
+        //   <Container fluid>
+        //     <Row className="mb-4">
+        //       <Col>
+        //         <h2 className="text-white text-capitalize">{activePage} Page</h2>
+        //         <p className="text-light">This page is under construction</p>
+        //       </Col>
+        //     </Row>
+        //   </Container>
+        // );
       default:
-        return <Admindash />;
+        return <Adminstudent />;
     }
   };
 
@@ -422,7 +425,7 @@ function Admin() {
   };
 
   const menuItems = [
-    { key: "dashboard", label: "Dashboard", icon: "speedometer2" },
+    { key: "mytasks", label: "My Tasks", icon: "speedometer2" },
     { key: "adminstudent", label: "Student", icon: "people" },
     { key: "staffs", label: "Staffs", icon: "people" },
     { key: "payment", label: "Payment", icon: "credit-card" }, 

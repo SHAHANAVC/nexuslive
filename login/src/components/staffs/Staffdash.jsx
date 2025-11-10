@@ -15,7 +15,11 @@ import {
   Dropdown,
 } from "react-bootstrap";
 
-function Staffdash() {
+function Staffdash({staffData}) {
+  console.log(staffData,"in dashboardddddddddddddddddddddddddddddddddddddd");
+
+
+  
   return (
     <>
       <Container fluid>
@@ -28,7 +32,7 @@ function Staffdash() {
                   Dashboard Overview
                 </h2>
                 <p className="text-light mb-0">
-                  Welcome back, admin! Here's what's happening today.
+                  Welcome back,{staffData.name}! Here's what's happening today.
                 </p>
               </div>
               <button className="d-flex p-2 button align-items-center gap-2">

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Container, Row, Col, Card, Form, Button, Modal, Alert, Badge  } from 'react-bootstrap';
 import api from '../../api';
+import { useEffect } from 'react';
 
-function Profile({ staffData }) {
-  const [allstaffDetails, setAllstaffDetails] = useState({})
-  const staffID = staffData.id
+function StaffProfile({ staffData }) { 
+    const [allstaffDetails, setAllstaffDetails] = useState({})
+   const staffID = staffData.id
    console.log(staffID);
 
    const allstaffData = async()=>{
@@ -21,17 +22,16 @@ function Profile({ staffData }) {
    }
 
    useEffect(()=>{allstaffData()},[])
+   
 
-  // console.log(staffData, "staffdata of Admin staff ---------------------------------------------------");
-  
+
+    
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
     newPassword: '',
     confirmPassword: ''
   });
-  // console.log(passwordData);
-  
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
 
   const handleChangePassword = async () => {
@@ -51,8 +51,6 @@ function Profile({ staffData }) {
       return;
     }
 
-    // Here you would typically make an API call to change the password
-    // console.log('Changing password:', passwordData);
     try{
       const reqres = await api.put(`/staff/${staffID}/change-password`,passwordData)
       console.log(reqres);
@@ -73,9 +71,6 @@ function Profile({ staffData }) {
       console.log(e,"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
 setAlert({ show: true, message: e.response?.data?.message || "Error while updating password", type: 'danger' });      
     }
-    // Simulate success
-   
-    
   };
 
   const formatDate = (dateString) => {
@@ -372,4 +367,4 @@ setAlert({ show: true, message: e.response?.data?.message || "Error while updati
   );
 }
 
-export default Profile;
+export default StaffProfile;
