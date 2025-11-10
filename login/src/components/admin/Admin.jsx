@@ -395,7 +395,7 @@ function Admin() {
         return <PaymentView staffData={userData}/>;
       case "tasks": 
         return <AdminTasks userData={userData}/>
-      case "dashboard":
+      case "mytasks":
         return <ViewTasks userData={userData}/>
         // return (
         //   <Container fluid>
@@ -425,7 +425,7 @@ function Admin() {
   };
 
   const menuItems = [
-    { key: "dashboard", label: "Dashboard", icon: "speedometer2" },
+    { key: "mytasks", label: "My Tasks", icon: "speedometer2" },
     { key: "adminstudent", label: "Student", icon: "people" },
     { key: "staffs", label: "Staffs", icon: "people" },
     { key: "payment", label: "Payment", icon: "credit-card" }, 

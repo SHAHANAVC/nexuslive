@@ -56,6 +56,7 @@ import StaffRegistration from "./components/StaffRegistration";
 import ViewStaff from "./components/superadmin/ViewStaff";
 import { AuthProvider } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
+import TLhomePage from "./components/TeamLead/TLhomePage";
 
 
 function App() {
@@ -111,9 +112,9 @@ function App() {
           <ViewStaff/></PrivateRoute>}></Route>
         <Route path={"/admin/staff/staffreg"} element={<StaffRegistration/>}></Route>
 
-
+          <Route path={'/teamlead'} element={<PrivateRoute roles={["teamlead"]}><TLhomePage/></PrivateRoute>}></Route>
       </Routes>
-      </AuthProvider>
+          </AuthProvider>
     </>
   );
 }

@@ -1379,7 +1379,24 @@ const handleCurrentStatus = (student) => {
   setSelectedStudent(student);
   setNewStatus(student.projectStatus);
   setShowStatusModal(true);
-};
+}; 
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+const fetchData = async ()=>{
+  try{
+    const staffRes = await api.get('/staff/all')
+    console.log(staffRes, "staff of team lead");
+    
+  }
+  catch(e){
+    console.log(e);
+    
+  }
+}
+
 
 
 // const handleSaveStatus = async () => {

@@ -45,7 +45,7 @@ function AdminTasks({userData}) {
         api.get("/tasks"),
         api.get("/staff/all")
       ]);
-      console.log(tasksRes);
+      // console.log(tasksRes);
       
       setTasks(tasksRes.data);
       setStaffList(staffRes.data.staff);
