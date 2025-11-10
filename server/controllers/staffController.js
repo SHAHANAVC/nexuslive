@@ -87,7 +87,7 @@ export const updateStaffRole = async (req, res) => {
     const { role } = req.body;
 
     // Validate role
-    if (!role || !["staff", "admin"].includes(role)) {
+    if (!role || !["staff", "admin","teamlead"].includes(role)) {
       return res.status(400).json({ message: "Invalid role. Allowed: 'staff' or 'admin'" });
     }
 
@@ -191,24 +191,23 @@ export const deleteStaff = async (req, res) => {
 export const changeStaffPassword = async (req, res) => {
   try {
     const { id } = req.params;
-    const { currentPassword, newPassword, confirmPassword } = req.body;
+    const { currentPassword, newPassword } = req.body;
+console.log(req.body);
 
     // Validate input
-    if (!currentPassword || !newPassword || !confirmPassword) {
+    if (!currentPassword || !newPassword ) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    if (newPassword !== confirmPassword) {
-      return res.status(400).json({ message: "New password and confirm password do not match" });
-    }
+    
 
     const staff = await Staff.findById(id);
     if (!staff) return res.status(404).json({ message: "Staff not found" });
 
     // Prevent normal staff from changing other staff's password
-    if (req.user.role !== "superAdmin" && req.user.id !== staff._id.toString()) {
-      return res.status(403).json({ message: "You are not authorized to change this password" });
-    }
+    // if (req.user.role !== "superAdmin" && req.user.id !== staff._id.toString()) {
+    //   return res.status(403).json({ message: "You are not authorized to change this password" });
+    // }
 
     // Verify current password
     const isMatch = await bcrypt.compare(currentPassword, staff.password);

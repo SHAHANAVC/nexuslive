@@ -42,14 +42,14 @@ import { getChangedFields } from "../utils/getChangedFields.js";
 //       const now = new Date();
 //       const year = now.getFullYear();
 //       const month = now.getMonth() + 1; // January is 1, December is 12
-      
+
 //       // Academic year: June 2024 to May 2025 = "24"
 //       // Academic year: June 2025 to May 2026 = "25"
 //       if (month >= 6) {
 //         // June to December - use current year
 //         return year.toString().slice(-2);
 //       } else {
-//         // January to May - use previous year  
+//         // January to May - use previous year
 //         return (year - 1).toString().slice(-2);
 //       }
 //     };
@@ -57,12 +57,12 @@ import { getChangedFields } from "../utils/getChangedFields.js";
 //     const academicYear = getAcademicYear();
 
 //     // Find last entry with same prefix and academic year
-//     const last = await Student.findOne({ 
-//       formId: new RegExp(`^${prefix}${academicYear}`) 
+//     const last = await Student.findOne({
+//       formId: new RegExp(`^${prefix}${academicYear}`)
 //     }).sort({ createdAt: -1 });
 
 //     let nextNumber = 1;
-    
+
 //     if (last) {
 //       // Extract the number part from formId (e.g., "TRY24001" -> 1)
 //       const lastNumber = parseInt(last.formId.slice(5), 10); // Skip prefix(3) + year(2)
@@ -99,7 +99,7 @@ export const createStudent = async (req, res) => {
       const now = new Date();
       const year = now.getFullYear();
       const month = now.getMonth() + 1; // January is 1, December is 12
-      
+
       // Academic year: June 2024 to May 2025 = "25" (NEXT year)
       // Academic year: June 2025 to May 2026 = "26" (NEXT year)
       if (month >= 6) {
@@ -114,12 +114,12 @@ export const createStudent = async (req, res) => {
     const academicYear = getAcademicYear();
 
     // Find last entry with same prefix and academic year
-    const last = await Student.findOne({ 
-      formId: new RegExp(`^${prefix}${academicYear}`) 
+    const last = await Student.findOne({
+      formId: new RegExp(`^${prefix}${academicYear}`),
     }).sort({ createdAt: -1 });
 
     let nextNumber = 1;
-    
+
     if (last) {
       // Extract the number part from formId (e.g., "TRY26001" -> 1)
       const lastNumber = parseInt(last.formId.slice(5), 10); // Skip prefix(3) + year(2)
@@ -127,7 +127,10 @@ export const createStudent = async (req, res) => {
     }
 
     // Format: TRY26001, NEX26001 (3-digit serial)
-    const formId = `${prefix}${academicYear}${String(nextNumber).padStart(3, "0")}`;
+    const formId = `${prefix}${academicYear}${String(nextNumber).padStart(
+      3,
+      "0"
+    )}`;
 
     const newStudent = new Student({ ...req.body, formId });
     await newStudent.save();
@@ -169,7 +172,9 @@ export const getStudentById = async (req, res) => {
     const { id } = req.params;
     const student = await Student.findById(id);
     if (!student)
-      return res.status(404).json({ success: false, message: "Student not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Student not found" });
 
     res.status(200).json({ success: true, data: student });
   } catch (err) {
@@ -182,26 +187,35 @@ export const getStudentById = async (req, res) => {
 export const updateStudent = async (req, res) => {
   try {
     console.log(req.body);
-    
+
     const { id } = req.params;
     console.log(id);
-    
+
     const updatedData = req.body;
 
     const existing = await Student.findById(id);
     if (!existing)
-      return res.status(404).json({ success: false, message: "Student not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Student not found" });
 
     const oldData = existing.toObject();
     const changes = getChangedFields(oldData, updatedData);
 
     if (Object.keys(changes).length === 0) {
-      return res.status(200).json({ success: true, message: "No changes detected", data: existing });
+      return res
+        .status(200)
+        .json({
+          success: true,
+          message: "No changes detected",
+          data: existing,
+        });
     }
 
     // Handle payment status update logic
     if (updatedData.paymentInfo) {
-      const totalPaid = updatedData.paymentInfo.totalPaid ?? existing.paymentInfo.totalPaid;
+      const totalPaid =
+        updatedData.paymentInfo.totalPaid ?? existing.paymentInfo.totalPaid;
       const fees = existing.fees;
       updatedData.paymentStatus = totalPaid >= fees ? "completed" : "pending";
       updatedData.paymentInfo.balance = fees - totalPaid;
@@ -235,17 +249,21 @@ export const updateStudent = async (req, res) => {
 
 // 🔴 Delete student
 export const deleteStudent = async (req, res) => {
-  console.log('.............',req.params);
-  
+  console.log(".............", req.params);
+
   try {
     const { id } = req.params;
     console.log(id);
-    
+
     const deleted = await Student.findByIdAndDelete(id);
     if (!deleted)
-      return res.status(404).json({ success: false, message: "Student not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Student not found" });
 
-    res.status(200).json({ success: true, message: "Student deleted successfully" });
+    res
+      .status(200)
+      .json({ success: true, message: "Student deleted successfully" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: "Server Error" });
@@ -253,7 +271,6 @@ export const deleteStudent = async (req, res) => {
 };
 
 // for payment
-
 
 // export const getstudentNamesById = async (req, res) => {
 //   console.log(req.query);
@@ -347,8 +364,7 @@ export const getstudentNamesById = async (req, res) => {
         institution: 1,
         projectName: 1,
         _id: 0,
-        phone:1,
-
+        phone: 1,
       }
     );
 
@@ -365,7 +381,7 @@ export const getstudentNamesById = async (req, res) => {
       formId: stu.formId,
       institution: stu.institution,
       category: stu.category,
-      phone:stu.phone||null,
+      phone: stu.phone || null,
       studentName:
         stu.category === "internship"
           ? stu.name
@@ -389,4 +405,63 @@ export const getstudentNamesById = async (req, res) => {
     });
   }
 };
+export const updateProjectStatus = async (req, res) => {
+  console.log(req.body, "rrrrrrrrrrrrrrrrrrrrrr");
 
+  try {
+    const { id } = req.params; // Student ID (MongoDB _id or formId)
+    console.log(id);
+    
+    const { status } = req.body;
+
+    if (!status) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide a new project status",
+      });
+    }
+
+    // ✅ Validate allowed status values (optional but recommended)
+    const allowedStatuses = ["not started", "ongoing", "completed", "dropped"];
+    if (!allowedStatuses.includes(status.toLowerCase())) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid project status. Allowed: ${allowedStatuses.join(
+          ", "
+        )}`,
+      });
+    }
+
+    // ✅ Find and update project status
+    const updated = await Student.findOneAndUpdate(
+      { _id: id }, // you can change to { formId: id } if you’re updating by formId
+      {
+        $set: { projectStatus:status },
+        
+      },
+      { new: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({
+        success: false,
+        message: "Student not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Project status updated successfully",
+      data: {
+        formId: updated.formId,
+        projectStatus: updated.status,
+      },
+    });
+  } catch (err) {
+    console.error("❌ Error updating project status:", err);
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};

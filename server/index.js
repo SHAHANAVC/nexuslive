@@ -168,6 +168,7 @@ import registrationRoutes from "./routes/registrationRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import staffRoutes from "./routes/staffRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
+import taskRoutes from "./routes/taskRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -193,7 +194,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/registrations", registrationRoutes);
 app.use("/api/staff", staffRoutes);
 app.use("/api/payment", paymentRoutes);
-
+app.use("/api/tasks", taskRoutes);
 // Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, "0.0.0.0", () =>

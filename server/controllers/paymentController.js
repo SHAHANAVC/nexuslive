@@ -90,7 +90,7 @@ export const recordPayment = async (req, res) => {
   console.log(req.body);
   
   try {
-    const { id, groupMember, paidAmount, paymentMethod } = req.body;
+    const { id, groupMember, paidAmount, paymentMethod ,staffname,staffemail} = req.body;
 
     if (!id || !paidAmount || !paymentMethod) {
       return res.status(400).json({ message: "Missing required fields" });
@@ -142,7 +142,9 @@ console.log(registration,'------------------------');
       memberEmail,
       memberName,
       paidAmount,
-      paymentMethod
+      paymentMethod,
+      staffname,
+      staffemail
     });
 
     // Update overall registration payment info

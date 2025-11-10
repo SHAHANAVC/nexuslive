@@ -9,6 +9,8 @@ import {
   changeStaffPassword 
 } from "../controllers/staffController.js";
 import { protect } from "../middleware/authMiddleware.js";
+import { updateProjectStatus } from "../controllers/studentController.js";
+
 
 const router = express.Router();
 
@@ -19,5 +21,7 @@ router.put("/:id", updateStaff);
 router.put("/:staffId/role", updateStaffRole);
 router.delete("/:id", deleteStaff);
 router.put("/:id/change-password", changeStaffPassword);
+
+
 
 export default router;

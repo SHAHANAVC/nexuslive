@@ -43,7 +43,7 @@ const staffSchema = new Schema({
   },
   role: {
     type: String,
-    enum: ["superAdmin", "admin", "staff"],
+    enum: ["superAdmin", "admin", "staff",'teamlead'],
     default: "staff",
   },
   department: {

@@ -1,6 +1,6 @@
 import express from "express";
 
-import { createStudent, deleteStudent, getstudentNamesById, getStudents, updateStudent } from "../controllers/studentController.js";
+import { createStudent, deleteStudent, getstudentNamesById, getStudents, updateProjectStatus, updateStudent } from "../controllers/studentController.js";
 
 
 const router = express.Router();
@@ -19,4 +19,6 @@ router.delete('/:id',deleteStudent)
 // router.get("/:id", getRegistrationById);
 router.get("/", getStudents);
 router.get('/names',getstudentNamesById)
+router.put("/:id/projectstatus", updateProjectStatus);
+
 export default router;

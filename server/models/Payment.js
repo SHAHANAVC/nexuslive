@@ -18,7 +18,10 @@ const paymentSchema = new Schema({
   memberName: String,
   paidAmount: { type: Number, required: true },
   paymentMethod: { type: String, enum: ["cash", "gpay", "bank"], required: true },
-  paymentDate: { type: Date, default: Date.now },
+  paymentDate: { type: Date, default: Date.now }, 
+  staffemail: { type: String, required: true },
+  staffname: { type: String, required: true },
+
 });
 
 const Payment = model("Payment", paymentSchema);
